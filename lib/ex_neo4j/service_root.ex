@@ -57,6 +57,18 @@ defmodule ExNeo4j.ServiceRoot do
     end
   end
 
+  @doc """
+  """
+  def nodes_with_label(root, label) when is_binary(label) do
+    response = HttpClient.get "/db/data/label/#{label}/nodes"
+    case response do
+      %{status_code: 200, body: body} ->
+        {:ok, Enum.map(body, fn data -> Node.new(data) end)}
+      %{status_code: status_code, body: body} ->
+        {:error, http_status: status_code, info: body}
+    end
+  end
+
   defp node_point(root) do
     root.points.node
   end
