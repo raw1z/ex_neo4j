@@ -3,7 +3,7 @@ defmodule ExNeo4j.Node do
   Functions for working with nodes
   """
 
-  defstruct properties: %{}, points: %{}
+  defstruct id: nil, properties: %{}, points: %{}
 
   use Jazz
 
@@ -14,9 +14,14 @@ defmodule ExNeo4j.Node do
   creates and return a new node by parsing the response of a create node request
   """
   def new(data) when is_map(data) do
+    points = node_points(data)
+    properties = node_properties(data)
+    id = node_id(points)
+
     %__MODULE__{
-      properties: node_properties(data),
-      points: node_points(data)
+      id: id,
+      properties: properties,
+      points: points
     }
   end
 
@@ -89,14 +94,29 @@ defmodule ExNeo4j.Node do
     node.points.labels
   end
 
+  defp node_id(points) do
+    id_from_url(points.self)
+  end
+
   defp node_properties(data) when is_map(data) do
     data["data"]
-    |> Map.to_list
-    |> Enum.map(fn {key, value} -> {binary_to_atom(key), value} end)
-    |> Enum.into(Map.new)
+      |> Map.to_list
+      |> Enum.map(fn {key, value} -> {binary_to_atom(key), value} end)
+      |> Enum.into(Map.new)
   end
 
   defp node_points(data) when is_map(data) do
     PointsParser.parse(data, HttpClient.base_url)
+  end
+
+  defp id_from_url(node_url) do
+    reversed_url = String.reverse(node_url)
+    [_, match] = Regex.run(~r/^(\d+)\/.*/, reversed_url)
+    {id, _} = Integer.parse String.reverse(match)
+    id
+  end
+
+  defp url_from_id(id) do
+    "/db/data/node/#{id}"
   end
 end
