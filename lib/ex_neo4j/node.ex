@@ -27,6 +27,21 @@ defmodule ExNeo4j.Node do
   end
 
   @doc """
+  replaces all existing properties on the node with the new attributes.
+  """
+  def update_properties(node, new_properties) when is_map(new_properties) do
+    response = HttpClient.put node.points.properties, JSON.encode!(new_properties)
+    case response do
+      %{status_code: 204} ->
+        node = Map.put(node, :properties, new_properties)
+        {:ok, node}
+
+      %{status_code: status_code, body: body} ->
+        {:error, http_status: status_code, info: body}
+    end
+  end
+
+  @doc """
   set a property on a given node
   if a property with the given name exists then its value is modified.
   Otherwise a new property is created
