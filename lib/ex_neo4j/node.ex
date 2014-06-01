@@ -7,6 +7,7 @@ defmodule ExNeo4j.Node do
 
   use Jazz
 
+  alias ExNeo4j.Node
   alias ExNeo4j.PointsParser
   alias ExNeo4j.HttpClient
 
@@ -77,6 +78,34 @@ defmodule ExNeo4j.Node do
     case response do
       %{status_code: 200, body: body} ->
         {:ok, body}
+      %{status_code: status_code, body: body} ->
+        {:error, http_status: status_code, info: body}
+    end
+  end
+
+  @doc """
+  returns the node matching the given label or nil if not found
+  """
+  def find(id) do
+    response = HttpClient.get(url_from_id(id))
+    case response do
+      %{status_code: 200, body: body} ->
+        {:ok, Node.new(body)}
+      %{status_code: 404, body: %{"exception" => "NodeNotFoundException"}} ->
+        {:ok, nil}
+      %{status_code: status_code, body: body} ->
+        {:error, http_status: status_code, info: body}
+    end
+  end
+
+  @doc """
+  deletes the given node
+  """
+  def delete(id) do
+    response = HttpClient.delete(url_from_id(id))
+    case response do
+      %{status_code: 204} ->
+        :ok
       %{status_code: status_code, body: body} ->
         {:error, http_status: status_code, info: body}
     end
