@@ -1,16 +1,16 @@
 defmodule ExNeo4j.Mixfile do
   use Mix.Project
+  use Mix.Config
+
+  if Mix.env in [:dev, :test], do: config(:lager, log_level: :debug)
+  if Mix.env == :prod, do: config(:lager, log_level: :warning)
 
   def project do
     [app: :neo4j,
      version: "0.0.1",
-     elixir: "~> 0.13.2",
-     elixirc_options: options(Mix.env),
+     elixir: "~> 0.14.0",
      deps: deps]
   end
-
-  def options(env) when env in [:dev, :test], do: [exlager_level: :debug]
-  def options(env) when env in [:prod], do: [exlager_level: :warning]
 
   # Configuration for the OTP application
   #

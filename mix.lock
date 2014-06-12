@@ -1,7 +1,9 @@
-%{"exactor": {:git, "git://github.com/sasa1977/exactor.git", "4581a21deafc5eaab7a9551c44facc8c8db25a97", []},
+%{"exactor": {:git, "git://github.com/sasa1977/exactor.git", "65a2cef190d2bd654d08c6f9ea49c8533bc432f6", []},
   "exlager": {:git, "git://github.com/khia/exlager.git", "99eb3fb763ae546edfe2ac3dd181987a4872dfcc", []},
   "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "71e63212f12c25827e0c1b4198d37d5d018a7fec", [tag: "0.1.6"]},
-  "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "346d9c775c628dbd21657bd232a28b7cf718e6e5", []},
+  "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "37e180343ed21c733a1a0b740d9d8d7081b7f721", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "7871e2ebe8811efb64e1917e2de455fa87e8dfe3", [tag: "v4.1.0"]},
-  "jazz": {:git, "git://github.com/meh/jazz.git", "7af3b74e58eb1a3fc6b9874a2077efa420f6dfcc", []},
-  "lager": {:git, "https://github.com/basho/lager.git", "4d8291edb72a25ac0efde907e2ecaa115108ff90", []}}
+  "jazz": {:git, "git://github.com/meh/jazz.git", "46079b7571d0c70874a0ca002612645d0bafd64c", []},
+  "lager": {:git, "https://github.com/basho/lager.git", "4d8291edb72a25ac0efde907e2ecaa115108ff90", []},
+  "meck": {:git, "git://github.com/eproxus/meck.git", "2eb19524a0cf33a0fc67fed766679c93d363ceee", []},
+  "mock": {:git, "git://github.com/jjh42/mock.git", "099c0fddac6f1444bc37753b65866f2138dceffa", []}}
