@@ -60,7 +60,7 @@ defmodule ExNeo4j.ServiceRoot do
   @doc """
   """
   def nodes_with_label(root, label) when is_binary(label) do
-    response = HttpClient.get "/db/data/label/#{label}/nodes"
+    response = HttpClient.get labelled_nodes_point(root, label)
     case response do
       %{status_code: 200, body: body} ->
         {:ok, Enum.map(body, fn data -> Node.new(data) end)}
@@ -69,12 +69,18 @@ defmodule ExNeo4j.ServiceRoot do
     end
   end
 
+  defp labelled_nodes_point(root, label) do
+    String.replace(root.points.labelled_nodes, "{label}", label)
+  end
+
   defp node_point(root) do
     root.points.node
   end
 
   defp list_points(response, base_url) do
-    PointsParser.parse(response, base_url)
+    points = PointsParser.parse(response, base_url)
+    Map.put points,
+      :labelled_nodes, "/db/data/label/{label}/nodes"
   end
 
   defp get_version(response) do
