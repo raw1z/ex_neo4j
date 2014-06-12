@@ -31,7 +31,7 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:jazz      , github: "meh/jazz"            } ,
+      {:jazz      , "~> 0.1.1"                    } ,
       {:exactor   , github: "sasa1977/exactor"    } ,
       {:httpotion , github: "myfreeweb/httpotion" } ,
       {:exlager   , github: "khia/exlager"        }
