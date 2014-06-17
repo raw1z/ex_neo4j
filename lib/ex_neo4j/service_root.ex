@@ -74,6 +74,7 @@ defmodule ExNeo4j.ServiceRoot do
   run a cypher query and returns the result
   """
   def cypher(root, query), do: cypher(root, query, %{})
+  def cypher(root, query, params) when is_list(params), do: cypher(root, query, Enum.into(params, %{}))
   def cypher(root, query, params) when is_map(params) do
     data = JSON.encode! %{ query: query, params: params }
     response = HttpClient.post cypher_point(root), data
