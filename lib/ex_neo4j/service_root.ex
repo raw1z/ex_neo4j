@@ -58,6 +58,7 @@ defmodule ExNeo4j.ServiceRoot do
   end
 
   @doc """
+  returns the node tagged with the given label
   """
   def nodes_with_label(root, label) when is_binary(label) do
     response = HttpClient.get labelled_nodes_point(root, label)
@@ -67,6 +68,32 @@ defmodule ExNeo4j.ServiceRoot do
       %{status_code: status_code, body: body} ->
         {:error, http_status: status_code, info: body}
     end
+  end
+
+  @doc """
+  run a cypher query and returns the result
+  """
+  def cypher(root, query), do: cypher(root, query, %{})
+  def cypher(root, query, params) when is_map(params) do
+    data = JSON.encode! %{ query: query, params: params }
+    response = HttpClient.post cypher_point(root), data
+    case response do
+      %{status_code: 200, body: body} ->
+        {:ok, format_cypher_response(body)}
+      %{status_code: status_code, body: body} ->
+        {:error, http_status: status_code, info: body}
+    end
+  end
+
+  defp format_cypher_response(response) do
+    columns = response["columns"]
+    response["data"]
+    |> Enum.map(fn data -> Enum.zip(columns, data) end)
+    |> Enum.map(fn data -> Enum.into(data, %{}) end)
+  end
+
+  defp cypher_point(root) do
+    root.points.cypher
   end
 
   defp labelled_nodes_point(root, label) do
