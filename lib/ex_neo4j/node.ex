@@ -14,6 +14,7 @@ defmodule ExNeo4j.Node do
   @doc """
   creates and return a new node by parsing the response of a create node request
   """
+  def new(nil), do: nil
   def new(data) when is_map(data) do
     points = node_points(data)
     properties = node_properties(data)
