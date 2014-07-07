@@ -51,7 +51,7 @@ defmodule ExNeo4j.Node do
     response = HttpClient.put(property_point(node, name), JSON.encode!(value))
     case response do
       %{status_code: 204} ->
-        new_properties = Map.put(node.properties, binary_to_atom(name), value)
+        new_properties = Map.put(node.properties, String.to_atom(name), value)
         node = Map.put(node, :properties, new_properties)
         {:ok, node}
 
@@ -146,7 +146,7 @@ defmodule ExNeo4j.Node do
   defp node_properties(data) when is_map(data) do
     data["data"]
       |> Map.to_list
-      |> Enum.map(fn {key, value} -> {binary_to_atom(key), value} end)
+      |> Enum.map(fn {key, value} -> {String.to_atom(key), value} end)
       |> Enum.into(Map.new)
   end
 

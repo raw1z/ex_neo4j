@@ -11,7 +11,7 @@ defmodule ExNeo4j.HttpClient.Api do
   end
 
   def process_response_body(body) do
-    body |> iodata_to_binary |> parse_json_body
+    body |> IO.iodata_to_binary |> parse_json_body
   end
 
   defp parse_json_body(""), do: nil
