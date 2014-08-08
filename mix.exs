@@ -2,9 +2,6 @@ defmodule ExNeo4j.Mixfile do
   use Mix.Project
   use Mix.Config
 
-  if Mix.env in [:dev, :test], do: config(:lager, log_level: :debug)
-  if Mix.env == :prod, do: config(:lager, log_level: :warning)
-
   def project do
     [app: :neo4j,
      version: "0.0.1",
@@ -16,7 +13,7 @@ defmodule ExNeo4j.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpotion, :exlager],
+    [applications: [:httpoison],
      mod: {ExNeo4j, []}]
   end
 
@@ -31,10 +28,10 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:jazz      , "~> 0.2.0"                    } ,
-      {:exactor   , github: "sasa1977/exactor"    } ,
-      {:httpotion , github: "myfreeweb/httpotion" } ,
-      {:exlager   , github: "khia/exlager"        }
+      {:jazz      , "~> 0.2.0"                                    } ,
+      {:exactor   , github: "sasa1977/exactor"                    } ,
+      {:httpoison , "~> 0.3"                                      } ,
+      {:hackney   , github: "benoitc/hackney"     , tag: "0.13.0" } ,
     ]
   end
 end

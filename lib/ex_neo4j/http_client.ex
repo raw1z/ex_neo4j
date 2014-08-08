@@ -3,7 +3,7 @@ defmodule ExNeo4j.HttpClient.State do
 end
 
 defmodule ExNeo4j.HttpClient.Api do
-  use HTTPotion.Base
+  use HTTPoison.Base
   use Jazz
 
   def process_request_headers(headers) do
