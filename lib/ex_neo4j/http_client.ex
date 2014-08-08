@@ -24,8 +24,15 @@ defmodule ExNeo4j.HttpClient do
   alias ExNeo4j.HttpClient.State
   alias ExNeo4j.HttpClient.Api
 
-  definit [ host: host, port: port, ssl: ssl ], do: %State{host: host, port: port, ssl: ssl} |> initial_state
-  definit do: %State{} |> initial_state
+  definit [ host: host, port: port, ssl: ssl ] do
+    Api.start
+    %State{host: host, port: port, ssl: ssl} |> initial_state
+  end
+
+  definit do
+    Api.start
+    %State{} |> initial_state
+  end
 
   defcall base_url, state: state, do: format_url(state, "") |> reply
 
