@@ -1,5 +1,5 @@
 defmodule ExNeo4j.HttpClient.State do
-  defstruct host: "localhost", port: 7474, ssl: false
+  defstruct url: nil
 end
 
 defmodule ExNeo4j.HttpClient.Api do
@@ -24,21 +24,12 @@ defmodule ExNeo4j.HttpClient do
   alias ExNeo4j.HttpClient.State
   alias ExNeo4j.HttpClient.Api
 
-  definit [ host: host, port: port, ssl: ssl ] do
+  definit url do
     Api.start
-    %State{host: host, port: port, ssl: ssl} |> initial_state
+    %State{url: url || "http://localhost:7474"} |> initial_state
   end
 
-  definit do
-    Api.start
-    %State{} |> initial_state
-  end
-
-  defcall base_url, state: state, do: format_url(state, "") |> reply
-
-  defcall host, state: state, do: state.host |> reply
-  defcall port, state: state, do: state.port |> reply
-  defcall ssl,  state: state, do: state.ssl  |> reply
+  defcall base_url, state: %State{url: url}, do: url |> reply
 
   defcall get(url, headers, options)         , state: state, do: Api.get(format_url(state, url), headers, options) |> reply
   defcall get(url, headers)                  , state: state, do: Api.get(format_url(state, url), headers) |> reply
@@ -64,12 +55,8 @@ defmodule ExNeo4j.HttpClient do
   defcall delete(url, headers)               , state: state, do: Api.delete(format_url(state, url), headers) |> reply
   defcall delete(url)                        , state: state, do: Api.delete(format_url(state, url)) |> reply
 
-  defp format_url(%State{host: host, port: port, ssl: false}, url) do
-    "http://#{host}:#{port}#{url}"
-  end
-
-  defp format_url(%State{host: host, port: port, ssl: true}, url) do
-    "https://#{host}:#{port}#{url}"
+  defp format_url(%State{url: url}, path) do
+    "#{url}#{path}"
   end
 end
 
