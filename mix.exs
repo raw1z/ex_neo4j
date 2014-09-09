@@ -5,7 +5,7 @@ defmodule ExNeo4j.Mixfile do
   def project do
     [app: :neo4j,
      version: "0.0.1",
-     elixir: "~> 0.15.0",
+     elixir: "~> 1.0.0-rc1",
      deps: deps]
   end
 
@@ -28,10 +28,9 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:jazz      , "~> 0.2.0"                                    } ,
-      {:exactor   , github: "sasa1977/exactor"                    } ,
-      {:httpoison , "~> 0.3"                                      } ,
-      {:hackney   , github: "benoitc/hackney"     , tag: "0.13.0" } ,
+      { :"exactor"   , "~> 0.7.0" } ,
+      { :"jazz"      , "~> 0.2.1" } ,
+      { :"httpoison" , "~> 0.4.2" } ,
     ]
   end
 end
