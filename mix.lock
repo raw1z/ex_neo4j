@@ -1,4 +1,5 @@
-%{"exactor": {:package, "0.7.0"},
+%{"axe": {:git, "git://github.com/raw1z/axe.git", "ae912e21e5cd8fb1b46c8aae9caae65ce1ef5112", [tag: "0.0.2"]},
+  "exactor": {:package, "0.7.0"},
   "exlager": {:git, "git://github.com/khia/exlager.git", "dca404300b04d2ad8f42e9ecc6f4c757e169071f", []},
   "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "71e63212f12c25827e0c1b4198d37d5d018a7fec", [tag: "0.1.6"]},
   "hackney": {:package, "0.13.1"},

@@ -1,31 +1,41 @@
-defmodule ExNeo4j.HttpClient.State do
-  defstruct url: nil
-end
-
-defmodule ExNeo4j.HttpClient.Api do
-  use HTTPoison.Base
-  use Jazz
-
-  def process_request_headers(headers) do
-    [{"X-Stream", "true"}|[{"Accept", "application/json; charset=UTF-8"}|[{"Content-Type", "application/json"}|headers]]]
-  end
-
-  def process_response_body(body) do
-    body |> IO.iodata_to_binary |> parse_json_body
-  end
-
-  defp parse_json_body(""), do: nil
-  defp parse_json_body(body), do: JSON.decode!(body)
-end
-
 defmodule ExNeo4j.HttpClient do
   use ExActor.GenServer, export: :neo4j_http_client
 
-  alias ExNeo4j.HttpClient.State
-  alias ExNeo4j.HttpClient.Api
+  defmodule State do
+    defstruct url: nil
+  end
+
+  defmodule Api do
+    use Jazz
+
+    Enum.map [:get, :post, :head, :put, :patch, :delete], fn method ->
+      def unquote(method)(url), do: unquote(method)(url, %{}, "")
+      def unquote(method)(url, headers) when is_map(headers), do: unquote(method)(url, headers, "")
+      def unquote(method)(url, body) when is_binary(body), do: unquote(method)(url, %{}, body)
+      def unquote(method)(url, headers, body) do
+        headers = process_request_headers(headers)
+        case Axe.Client.unquote(method)(url, headers, body) do
+          %Axe.Worker.Response{}=response ->
+            %Axe.Worker.Response{response | body: parse_json_body(response.body)}
+          error ->
+            error
+        end
+      end
+    end
+
+    def process_request_headers(headers) do
+      [{"X-Stream", "true"},{"Accept", "application/json; charset=UTF-8"},{"Content-Type", "application/json"}]
+      |> Enum.into(%{})
+      |> Map.merge(headers)
+    end
+
+    defp parse_json_body(""), do: nil
+    defp parse_json_body(body), do: JSON.decode!(body)
+  end
+
 
   definit url do
-    Api.start
+    {:ok, _} = Axe.Worker.start
     %State{url: url || "http://localhost:7474"} |> initial_state
   end
 
