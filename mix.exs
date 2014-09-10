@@ -13,7 +13,7 @@ defmodule ExNeo4j.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison],
+    [applications: [:axe],
      mod: {ExNeo4j, []}]
   end
 
@@ -28,9 +28,10 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :"exactor"   , "~> 0.7.0" } ,
-      { :"jazz"      , "~> 0.2.1" } ,
-      { :"httpoison" , "~> 0.4.2" } ,
+      { :exactor   , "~> 0.7.0" } ,
+      { :jazz      , "~> 0.2.1" } ,
+
+      { :axe, github: "raw1z/axe", tag: "0.0.2" }
     ]
   end
 end
