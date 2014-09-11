@@ -35,7 +35,6 @@ defmodule ExNeo4j.HttpClient do
 
 
   definit url do
-    {:ok, _} = Axe.Worker.start
     %State{url: url || "http://localhost:7474"} |> initial_state
   end
 
