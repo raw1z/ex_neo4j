@@ -1,3 +1,3 @@
 # ExNeo4j
 
-** TODO: Add description **
+Elixir client to neo4j
