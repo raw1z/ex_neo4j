@@ -15,8 +15,8 @@ defmodule ExNeo4j.HttpClient do
       def unquote(method)(url, headers, body) do
         headers = process_request_headers(headers)
         case Axe.Client.unquote(method)(url, headers, body) do
-          %Axe.Worker.Response{}=response ->
-            %Axe.Worker.Response{response | body: parse_json_body(response.body)}
+          %Axe.Response{}=response ->
+            %Axe.Response{response | body: parse_json_body(response.body)}
           error ->
             error
         end
