@@ -5,7 +5,7 @@ defmodule ExNeo4j.Node do
 
   defstruct id: nil, properties: %{}, points: %{}
 
-  use Jazz
+  alias Poison, as: JSON
 
   alias ExNeo4j.Node
   alias ExNeo4j.PointsParser

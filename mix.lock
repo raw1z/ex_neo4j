@@ -10,4 +10,5 @@
   "jazz": {:package, "0.2.1"},
   "lager": {:git, "https://github.com/basho/lager.git", "dd267603e93e8babe9ef9164fc176b430d669431", []},
   "meck": {:git, "git://github.com/eproxus/meck.git", "2eb19524a0cf33a0fc67fed766679c93d363ceee", []},
-  "mock": {:git, "git://github.com/jjh42/mock.git", "099c0fddac6f1444bc37753b65866f2138dceffa", []}}
+  "mock": {:git, "git://github.com/jjh42/mock.git", "099c0fddac6f1444bc37753b65866f2138dceffa", []},
+  "poison": {:package, "1.1.1"}}

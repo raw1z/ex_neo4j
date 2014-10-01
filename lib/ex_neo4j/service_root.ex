@@ -2,7 +2,7 @@ defmodule ExNeo4j.ServiceRoot do
 
   defstruct base_url: nil, version: nil, points: %{}
 
-  use Jazz
+  alias Poison, as: JSON
 
   alias ExNeo4j.HttpClient
   alias ExNeo4j.Node

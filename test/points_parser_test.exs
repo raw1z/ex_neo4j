@@ -1,6 +1,6 @@
 defmodule PointsParserTest do
   use ExUnit.Case
-  use Jazz
+  alias Poison, as: JSON
   alias ExNeo4j.PointsParser
 
   setup do

@@ -29,7 +29,7 @@ defmodule ExNeo4j.Mixfile do
   defp deps do
     [
       { :exactor   , "~> 0.7.0"   } ,
-      { :jazz      , "~> 0.2.1"   } ,
+      { :poison    , "~> 1.1.1"   } ,
       { :axe, github: "raw1z/axe" }
     ]
   end

@@ -6,7 +6,7 @@ defmodule ExNeo4j.HttpClient do
   end
 
   defmodule Api do
-    use Jazz
+    alias Poison, as: JSON
 
     Enum.map [:get, :post, :head, :put, :patch, :delete], fn method ->
       def unquote(method)(url), do: unquote(method)(url, %{}, "")
