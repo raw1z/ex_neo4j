@@ -28,7 +28,7 @@ defmodule ExNeo4j.ServiceRoot do
     response = HttpClient.get("/db/data/")
     case response do
       %{status_code: 200, body: body} ->
-        result = Poison.decode!(response.body, as: ServiceRootQueryResult)
+        result = Poison.decode!(body, as: ServiceRootQueryResult)
         root = %__MODULE__{
           base_url: HttpClient.base_url,
           version: get_version(result),
