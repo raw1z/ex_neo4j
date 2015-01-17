@@ -6,20 +6,13 @@ defmodule ExNeo4j.HttpClient do
   end
 
   defmodule Api do
-    alias Poison, as: JSON
-
     Enum.map [:get, :post, :head, :put, :patch, :delete], fn method ->
       def unquote(method)(url), do: unquote(method)(url, %{}, "")
       def unquote(method)(url, headers) when is_map(headers), do: unquote(method)(url, headers, "")
       def unquote(method)(url, body) when is_binary(body), do: unquote(method)(url, %{}, body)
       def unquote(method)(url, headers, body) do
         headers = process_request_headers(headers)
-        case Axe.Client.unquote(method)(url, headers, body) do
-          %Axe.Response{}=response ->
-            %Axe.Response{response | body: parse_json_body(response.body)}
-          error ->
-            error
-        end
+        Axe.Client.unquote(method)(url, headers, body)
       end
     end
 
@@ -28,9 +21,6 @@ defmodule ExNeo4j.HttpClient do
       |> Enum.into(%{})
       |> Map.merge(headers)
     end
-
-    defp parse_json_body(""), do: nil
-    defp parse_json_body(body), do: JSON.decode!(body)
   end
 
 

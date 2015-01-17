@@ -1,69 +1,49 @@
 defmodule PointsParserTest do
-  use ExUnit.Case
-  alias Poison, as: JSON
+  use ExUnit.Case, async: true
   alias ExNeo4j.PointsParser
 
-  setup do
-    data = """
-    {
-      "extensions" : {
-      },
-      "paged_traverse" : "http://localhost:7474/db/data/node/184/paged/traverse/{returnType}{?pageSize,leaseTime}",
-      "labels" : "http://localhost:7474/db/data/node/184/labels",
-      "outgoing_relationships" : "http://localhost:7474/db/data/node/184/relationships/out",
-      "traverse" : "http://localhost:7474/db/data/node/184/traverse/{returnType}",
-      "all_typed_relationships" : "http://localhost:7474/db/data/node/184/relationships/all/{-list|&|types}",
-      "property" : "http://localhost:7474/db/data/node/184/properties/{key}",
-      "all_relationships" : "http://localhost:7474/db/data/node/184/relationships/all",
-      "self" : "http://localhost:7474/db/data/node/184",
-      "outgoing_typed_relationships" : "http://localhost:7474/db/data/node/184/relationships/out/{-list|&|types}",
-      "properties" : "http://localhost:7474/db/data/node/184/properties",
-      "incoming_relationships" : "http://localhost:7474/db/data/node/184/relationships/in",
-      "incoming_typed_relationships" : "http://localhost:7474/db/data/node/184/relationships/in/{-list|&|types}",
-      "create_relationship" : "http://localhost:7474/db/data/node/184/relationships",
-      "data" : {
-      }
-    }
-    """
+  @query_result %ExNeo4j.ServiceRoot.ServiceRootQueryResult{
+    batch: "http://localhost:7474/db/data/batch",
+    constraints: "http://localhost:7474/db/data/schema/constraint",
+    cypher: "http://localhost:7474/db/data/cypher",
+    extensions: %{},
+    extensions_info: "http://localhost:7474/db/data/ext",
+    indexes: "http://localhost:7474/db/data/schema/index",
+    neo4j_version: "2.1.5",
+    node: "http://localhost:7474/db/data/node",
+    node_index: "http://localhost:7474/db/data/index/node",
+    node_labels: "http://localhost:7474/db/data/labels",
+    relationship_index: "http://localhost:7474/db/data/index/relationship",
+    relationship_types: "http://localhost:7474/db/data/relationship/types",
+    transaction: "http://localhost:7474/db/data/transaction"}
 
-    {:ok, data: data}
+  test "parses the points inside a json response" do
+    points = PointsParser.parse(@query_result, "http://localhost:7474")
+    assert points.batch == "/db/data/batch"
+    assert points.constraints == "/db/data/schema/constraint"
+    assert points.cypher == "/db/data/cypher"
+    assert points.extensions_info == "/db/data/ext"
+    assert points.indexes == "/db/data/schema/index"
+    assert points.node == "/db/data/node"
+    assert points.node_index == "/db/data/index/node"
+    assert points.node_labels == "/db/data/labels"
+    assert points.relationship_index == "/db/data/index/relationship"
+    assert points.relationship_types == "/db/data/relationship/types"
+    assert points.transaction == "/db/data/transaction"
   end
 
-  test "parses the points inside a json response", context do
-    json = JSON.decode!(context[:data])
-    points = PointsParser.parse(json, "http://localhost:7474")
-
-    assert points.paged_traverse == "/db/data/node/184/paged/traverse/{returnType}{?pageSize,leaseTime}"
-    assert points.labels == "/db/data/node/184/labels"
-    assert points.outgoing_relationships == "/db/data/node/184/relationships/out"
-    assert points.traverse == "/db/data/node/184/traverse/{returnType}"
-    assert points.all_typed_relationships == "/db/data/node/184/relationships/all/{-list|&|types}"
-    assert points.property == "/db/data/node/184/properties/{key}"
-    assert points.all_relationships == "/db/data/node/184/relationships/all"
-    assert points.self == "/db/data/node/184"
-    assert points.outgoing_typed_relationships == "/db/data/node/184/relationships/out/{-list|&|types}"
-    assert points.properties == "/db/data/node/184/properties"
-    assert points.incoming_relationships == "/db/data/node/184/relationships/in"
-    assert points.incoming_typed_relationships == "/db/data/node/184/relationships/in/{-list|&|types}"
-    assert points.create_relationship == "/db/data/node/184/relationships"
-  end
-
-  test "parses the points inside a json response with a base url containing authentication info", context do
-    json = JSON.decode!(context[:data])
-    points = PointsParser.parse(json, "http://user:password@localhost:7474")
-
-    assert points.paged_traverse == "/db/data/node/184/paged/traverse/{returnType}{?pageSize,leaseTime}"
-    assert points.labels == "/db/data/node/184/labels"
-    assert points.outgoing_relationships == "/db/data/node/184/relationships/out"
-    assert points.traverse == "/db/data/node/184/traverse/{returnType}"
-    assert points.all_typed_relationships == "/db/data/node/184/relationships/all/{-list|&|types}"
-    assert points.property == "/db/data/node/184/properties/{key}"
-    assert points.all_relationships == "/db/data/node/184/relationships/all"
-    assert points.self == "/db/data/node/184"
-    assert points.outgoing_typed_relationships == "/db/data/node/184/relationships/out/{-list|&|types}"
-    assert points.properties == "/db/data/node/184/properties"
-    assert points.incoming_relationships == "/db/data/node/184/relationships/in"
-    assert points.incoming_typed_relationships == "/db/data/node/184/relationships/in/{-list|&|types}"
-    assert points.create_relationship == "/db/data/node/184/relationships"
+  test "parses the points inside a json response with a base url containing authentication info" do
+    points = PointsParser.parse(@query_result, "http://user:password@localhost:7474")
+    assert points.batch == "/db/data/batch"
+    assert points.constraints == "/db/data/schema/constraint"
+    assert points.cypher == "/db/data/cypher"
+    assert points.extensions_info == "/db/data/ext"
+    assert points.indexes == "/db/data/schema/index"
+    assert points.node == "/db/data/node"
+    assert points.node_index == "/db/data/index/node"
+    assert points.node_labels == "/db/data/labels"
+    assert points.relationship_index == "/db/data/index/relationship"
+    assert points.relationship_types == "/db/data/relationship/types"
+    assert points.transaction == "/db/data/transaction"
   end
 end
