@@ -10,12 +10,12 @@ defmodule ExNeo4j.Model do @doc false
 
       Module.register_attribute(__MODULE__ , :fields               , accumulate: true)
       Module.register_attribute(__MODULE__ , :relationships        , accumulate: true)
+      Module.register_attribute(__MODULE__ , :functions            , accumulate: true)
       # Module.register_attribute(__MODULE__ , :before_save          , accumulate: true)
       # Module.register_attribute(__MODULE__ , :before_create        , accumulate: true)
       # Module.register_attribute(__MODULE__ , :after_save           , accumulate: true)
       # Module.register_attribute(__MODULE__ , :after_create         , accumulate: true)
       # Module.register_attribute(__MODULE__ , :after_find           , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :functions            , accumulate: true)
       # Module.register_attribute(__MODULE__ , :validation_functions , accumulate: true)
 
       @label "#{Mix.env |> Atom.to_string |> String.capitalize}:#{String.replace(Macro.to_string(__MODULE__), ".", ":")}"
@@ -34,8 +34,8 @@ defmodule ExNeo4j.Model do @doc false
 
     quote do
       unquote ExNeo4j.Model.Struct.generate(metadata)
+      unquote ExNeo4j.Model.BuildMethod.generate(metadata)
       # unquote ExNeo4j.Model.Methods.generate(metadata)
-      # unquote ExNeo4j.Model.NewMethod.generate(metadata)
       # unquote ExNeo4j.Model.Validations.generate(metadata)
       # unquote ExNeo4j.Model.SaveMethod.generate(metadata)
       # unquote ExNeo4j.Model.CreateMethod.generate(metadata)
