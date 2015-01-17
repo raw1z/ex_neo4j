@@ -22,9 +22,11 @@ defmodule ExNeo4j.Model do @doc false
       @before_compile ExNeo4j.Model
 
       field :id, accessible: false, type: :integer
-      field :errors, transient: true, accessible: false
+      field :relationships, transient: true
+      field :errors, transient: true
       field :created_at, type: :date
       field :updated_at, type: :date
+      field :validated, type: :boolean, default: false
     end
   end
 
@@ -35,9 +37,10 @@ defmodule ExNeo4j.Model do @doc false
     quote do
       unquote ExNeo4j.Model.Struct.generate(metadata)
       unquote ExNeo4j.Model.BuildMethod.generate(metadata)
+      unquote ExNeo4j.Model.SaveMethod.generate(metadata)
+      unquote ExNeo4j.Model.ParseNodeMethod.generate(metadata)
       # unquote ExNeo4j.Model.Methods.generate(metadata)
       # unquote ExNeo4j.Model.Validations.generate(metadata)
-      # unquote ExNeo4j.Model.SaveMethod.generate(metadata)
       # unquote ExNeo4j.Model.CreateMethod.generate(metadata)
       # unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
       # unquote ExNeo4j.Model.Update.generate(metadata)

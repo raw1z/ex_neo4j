@@ -43,7 +43,11 @@ defmodule ExNeo4j.Db.Cypher do
           %CypherQueryResult{errors: [], results: results} ->
             {:ok, results |> List.first |> format_cypher_response}
           %CypherQueryResult{errors: errors} ->
-            {:error, errors}
+            formatter = &Enum.map(&1, fn {k,v} -> {String.to_atom(k), v} end)
+            formatted_errors = errors
+              |> Enum.map(&formatter.(&1))
+              |> Enum.map(&Enum.into(&1, %{}))
+            {:error, formatted_errors }
         end
       end
 

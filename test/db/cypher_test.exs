@@ -1,7 +1,15 @@
 defmodule CypherTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   alias ExNeo4j.Db
   alias ExNeo4j.Helpers
+
+  setup do
+    Mock.fake
+
+    on_exit fn ->
+      Mock.unload
+    end
+  end
 
   test "execute a query without arguments" do
     query = "match (n) return n"

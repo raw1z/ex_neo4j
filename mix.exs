@@ -28,10 +28,13 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :exactor , "~> 2.0.1"                         } ,
-      { :poison  , "~> 1.3.0"                         } ,
-      { :axe     , github: "raw1z/axe"                } ,
-      { :meck    , "~> 0.8.2"          , only: :test  }
+      { :exactor , "~> 2.0.1"          } ,
+      { :poison  , "~> 1.3.0"          } ,
+      { :axe     , github: "raw1z/axe" } ,
+      { :chronos , "~> 0.3.5"          } ,
+      { :inflex  , "~> 0.2.5"          } ,
+
+      { :meck, "~> 0.8.2", only: :test }
     ]
   end
 end

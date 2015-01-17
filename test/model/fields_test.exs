@@ -10,7 +10,7 @@ defmodule Model.FieldsTest do
 
   test "defines fields" do
     field_names = Person.metadata.fields |> Enum.map fn field -> field.name end
-    assert field_names == [:age, :created_at, :email, :errors, :id, :name, :updated_at]
+    assert field_names == [:age, :created_at, :email, :errors, :id, :name, :relationships, :updated_at, :validated]
   end
 
   test "sets the type of the fields" do

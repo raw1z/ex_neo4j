@@ -1,6 +1,14 @@
 defmodule ServiceRootTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   alias ExNeo4j.ServiceRoot
+
+  setup do
+    Mock.fake
+
+    on_exit fn ->
+      Mock.unload
+    end
+  end
 
   test "get the service root" do
     {:ok, root} = ServiceRoot.get

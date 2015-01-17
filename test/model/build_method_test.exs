@@ -4,8 +4,8 @@ defmodule Model.BuildMethodTest do
   defmodule Person do
     use ExNeo4j.Model
     field :name, required: true
+    field :email, required: true
     field :age, type: :integer
-    field :email, required: true, unique: true, format: ~r/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
 
     relationship :FRIEND_OF, Person
     relationship :MARRIED_TO, Person
