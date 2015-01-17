@@ -1,4 +1,4 @@
-defmodule Model.SaveMethodTest do
+defmodule Model.CreateMethodTest do
   use ExUnit.Case
 
   setup do
@@ -22,8 +22,7 @@ defmodule Model.SaveMethodTest do
     fake_successfull_save
     ExNeo4j.Db.start
 
-    person = Person.build(name: "John DOE", age: 20)
-    {:ok, person} = Person.save(person)
+    {:ok, person} = Person.create(name: "John DOE", age: 20)
 
     assert person.id == 81776
     assert person.name == "John DOE"
@@ -36,8 +35,7 @@ defmodule Model.SaveMethodTest do
     fake_failed_save
     ExNeo4j.Db.start
 
-    person = Person.build(name: "John DOE", age: 20)
-    {:nok, [resp], person} = Person.save(person)
+    {:nok, [resp], person} = Person.create(name: "John DOE", age: 20)
 
     assert person.id == nil
     assert resp.code == "Neo.ClientError.Statement.InvalidSyntax"
