@@ -5,7 +5,8 @@ defmodule ExNeo4j.Db.Core do
       alias ExNeo4j.HttpClient
       alias ExNeo4j.ServiceRoot
 
-      definit(url) do
+      defstart start(url \\ nil)
+      defstart start_link(url \\ nil) do
         HttpClient.start_link(url)
         {:ok, service_root} = ServiceRoot.get
         service_root |> initial_state

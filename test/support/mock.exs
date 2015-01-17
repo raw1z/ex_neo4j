@@ -2,7 +2,7 @@ defmodule Mock do
   use ExActor.GenServer, export: :mock
   alias ExNeo4j.HttpClient
 
-  definit do
+  defstart start_link do
     :meck.new(HttpClient)
     :meck.expect(HttpClient, :start_link, fn (nil) -> :ok end)
     :meck.expect(HttpClient, :base_url, fn -> "http://localhost:7474" end)
