@@ -9,6 +9,7 @@ defmodule ExNeo4j.Model do @doc false
       import ExNeo4j.Model
 
       Module.register_attribute(__MODULE__ , :fields               , accumulate: true)
+      Module.register_attribute(__MODULE__ , :relationships        , accumulate: true)
       # Module.register_attribute(__MODULE__ , :before_save          , accumulate: true)
       # Module.register_attribute(__MODULE__ , :before_create        , accumulate: true)
       # Module.register_attribute(__MODULE__ , :after_save           , accumulate: true)
@@ -16,14 +17,12 @@ defmodule ExNeo4j.Model do @doc false
       # Module.register_attribute(__MODULE__ , :after_find           , accumulate: true)
       # Module.register_attribute(__MODULE__ , :functions            , accumulate: true)
       # Module.register_attribute(__MODULE__ , :validation_functions , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :relationships        , accumulate: true)
 
       @label "#{Mix.env |> Atom.to_string |> String.capitalize}:#{String.replace(Macro.to_string(__MODULE__), ".", ":")}"
       @before_compile ExNeo4j.Model
 
       field :id, accessible: false, type: :integer
       field :errors, transient: true, accessible: false
-      field :relationships, transient: true, accessible: false
       field :created_at, type: :date
       field :updated_at, type: :date
     end
@@ -94,14 +93,26 @@ defmodule ExNeo4j.Model do @doc false
     end
   end
 
-  # defmacro relationship(name, related_model) do
-  #   field_name = related_model
-  #   field_attributes = [relationship: true, type: :number]
-  #   quote do
-  #     @fields {unquote(field_name), unquote(field_attributes)}
-  #     @relationships {unquote(name), unquote(related_model)}
-  #   end
-  # end
+  @doc """
+  Defines a relationship for the model
+
+  ## Example
+
+      defmodule Person do
+        use ExNeo4j.Model
+
+        field :name
+        relationship :FRIEND_OF, Person
+      end
+  """
+  defmacro relationship(name, related_model) do
+    field_name = name |> Atom.to_string |> String.downcase |> String.to_atom
+    field_attributes = [relationship: true, type: :integer]
+    quote do
+      @fields {unquote(field_name), unquote(field_attributes)}
+      @relationships {unquote(name), unquote(related_model)}
+    end
+  end
 
   # defmacro validate_with(method_name) when is_atom(method_name) do
   #   quote do

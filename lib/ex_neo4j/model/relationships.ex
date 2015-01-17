@@ -1,4 +1,4 @@
-defmodule Taxi.Model.Relationship do
+defmodule ExNeo4j.Model.Relationship do
   defstruct name: nil, related_model: nil
 
   def new(name, related_model) do
