@@ -40,10 +40,10 @@ defmodule ExNeo4j.Model do @doc false
       unquote ExNeo4j.Model.ParseNodeMethod.generate(metadata)
       unquote ExNeo4j.Model.SaveMethod.generate(metadata)
       unquote ExNeo4j.Model.CreateMethod.generate(metadata)
+      unquote ExNeo4j.Model.UpdateMethod.generate(metadata)
       # unquote ExNeo4j.Model.Methods.generate(metadata)
       # unquote ExNeo4j.Model.Validations.generate(metadata)
       # unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
-      # unquote ExNeo4j.Model.Update.generate(metadata)
       # unquote ExNeo4j.Model.Serialization.generate(metadata)
 
       @doc """
