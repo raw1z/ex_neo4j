@@ -42,6 +42,38 @@ defmodule Mock do
     {:reply, :ok, state}
   end
 
+  defcall fake_find_by_id_request(id, expected_response), state: state do
+    query = """
+    START n=node(#{id})
+    RETURN id(n), n
+    """
+    mock_find_request query, expected_response
+    {:reply, :ok, state}
+  end
+
+  defcall fake_find_all_request(expected_response), state: state do
+    query = """
+    MATCH (n:Test:Model:FindMethodTest:Person {})
+    RETURN id(n), n
+    """
+    mock_find_request query, expected_response
+    {:reply, :ok, state}
+  end
+
+  defcall fake_find_by_properties_request(expected_response), state: state do
+    query = """
+    MATCH (n:Test:Model:FindMethodTest:Person {age: 30})
+    RETURN id(n), n
+    """
+    mock_find_request query, expected_response
+    {:reply, :ok, state}
+  end
+
+  defp mock_find_request(query, expected_response) do
+    params = ExNeo4j.Helpers.format_statements([{query, %{}}])
+    mock_http_request :post, ["/db/data/transaction/commit", params], expected_response
+  end
+
   defp mock_http_request(method, params, expected_response) do
     response = faked_response(List.first(params), expected_response)
     :meck.expect(HttpClient, method, params, response)

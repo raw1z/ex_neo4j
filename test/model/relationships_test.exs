@@ -1,5 +1,5 @@
 defmodule Model.RelationshipTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   defmodule Person do
     use ExNeo4j.Model

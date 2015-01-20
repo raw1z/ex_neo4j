@@ -1,5 +1,5 @@
 defmodule PointsParserTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   alias ExNeo4j.PointsParser
 
   @query_result %ExNeo4j.ServiceRoot.ServiceRootQueryResult{
