@@ -24,7 +24,7 @@ defmodule ExNeo4j.HttpClient do
   end
 
 
-  defstart start_link(url) do
+  defstart start_link(url \\ nil) do
     %State{url: url || "http://localhost:7474"} |> initial_state
   end
 

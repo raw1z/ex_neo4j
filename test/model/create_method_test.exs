@@ -20,7 +20,6 @@ defmodule Model.CreateMethodTest do
 
   test "parses responses to successfull save requests" do
     fake_successfull_save
-    ExNeo4j.Db.start
 
     {:ok, person} = Person.create(name: "John DOE", age: 20)
 
@@ -33,7 +32,6 @@ defmodule Model.CreateMethodTest do
 
   test "parses responses to failed save requests" do
     fake_failed_save
-    ExNeo4j.Db.start
 
     {:nok, [resp], person} = Person.create(name: "John DOE", age: 20)
 

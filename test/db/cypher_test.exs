@@ -29,7 +29,6 @@ defmodule CypherTest do
     }
     """
 
-    Db.start
     {:ok, results} = Db.cypher(query)
     assert Enum.count(results) == 1
 
@@ -58,7 +57,6 @@ defmodule CypherTest do
     }
     """
 
-    Db.start
     {:ok, results} = Db.cypher(query, params)
     assert Enum.count(results) == 1
 
@@ -96,7 +94,6 @@ defmodule CypherTest do
     }
     """
 
-    Db.start
     {:ok, results} = Db.cypher([{query1, query1_params}, {query2, query2_params}])
     assert Enum.count(results) == 2
 

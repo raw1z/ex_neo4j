@@ -8,7 +8,7 @@ defmodule ExNeo4j.Supervisor do
   def init([]) do
     children = [
       # Define workers and child supervisors to be supervised
-      # worker(ExNeo4j.Worker, [arg1, arg2, arg3])
+      worker(ExNeo4j.Db, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/Supervisor.Behaviour.html

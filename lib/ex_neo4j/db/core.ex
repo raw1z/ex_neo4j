@@ -5,9 +5,16 @@ defmodule ExNeo4j.Db.Core do
       alias ExNeo4j.HttpClient
       alias ExNeo4j.ServiceRoot
 
-      defstart start(url \\ nil)
-      defstart start_link(url \\ nil) do
-        HttpClient.start_link(url)
+      defstart start()
+      defstart start_link() do
+        case Application.get_env(:neo4j, :db) do
+          nil ->
+            HttpClient.start_link()
+          config  ->
+            url = Keyword.get(config, :url)
+            HttpClient.start_link(url)
+        end
+
         {:ok, service_root} = ServiceRoot.get
         service_root |> initial_state
       end

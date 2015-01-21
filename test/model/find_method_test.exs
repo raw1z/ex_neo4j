@@ -1,6 +1,5 @@
 defmodule Model.FindMethodTest do
   use ExUnit.Case
-  alias ExNeo4j.Db
 
   setup do
     Mock.fake
@@ -35,7 +34,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:ok, people} = Person.find()
     assert Enum.count(people) == 2
 
@@ -55,7 +53,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:ok, people} = Person.find()
     assert Enum.count(people) == 0
   end
@@ -71,7 +68,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:nok, [resp]} = Person.find()
     assert resp.code == "Neo.ClientError.Statement.InvalidSyntax"
     assert resp.message == "Invalid input 'T': expected <init> (line 1, column 1)\n\"This is not a valid Cypher Statement.\"\n ^"
@@ -92,7 +88,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:ok, person} = Person.find(81776)
     assert person.id == 81776
     assert person.name == "John DOE"
@@ -109,7 +104,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:ok, person} = Person.find(81776)
     assert person == nil
   end
@@ -125,7 +119,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:nok, [resp]} = Person.find(81776)
     assert resp.code == "Neo.ClientError.Statement.InvalidSyntax"
     assert resp.message == "Invalid input 'T': expected <init> (line 1, column 1)\n\"This is not a valid Cypher Statement.\"\n ^"
@@ -147,7 +140,6 @@ defmodule Model.FindMethodTest do
     }
     """
 
-    Db.start
     {:ok, people} = Person.find(age: 30)
     assert Enum.count(people) == 2
 
