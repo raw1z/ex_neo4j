@@ -17,6 +17,11 @@ defmodule ExNeo4j.Model.UpdateMethod do
       def update_attribute(model, name, value) do
         Map.put(model, name, value)
       end
+
+      def update(%__MODULE__{}=model, attributes) do
+        model = update_attributes(model, attributes)
+        save(model)
+      end
     end
   end
 end
