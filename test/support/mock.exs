@@ -13,11 +13,13 @@ defmodule Mock do
   end
 
   defcall unload, state: state do
+    :meck.unload(Chronos)
     :meck.unload(HttpClient)
     {:reply, :ok, state}
   end
 
   defcall fake, state: state do
+    :meck.expect(Chronos, :now, fn -> {{2014, 10, 14}, {2, 55, 3}} end)
     :meck.expect(HttpClient, :start_link, fn (nil) -> :ok end)
     :meck.expect(HttpClient, :base_url, fn -> "http://localhost:7474" end)
 
