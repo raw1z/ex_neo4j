@@ -1,11 +1,11 @@
 defmodule ExNeo4j.Model.ParseNodeMethod do
-  def generate(metadata) do
+  def generate(_metadata) do
     quote do
-      unquote generate_parse_node(metadata)
+      unquote generate_parse_node()
     end
   end
 
-  defp generate_parse_node(metadata) do
+  defp generate_parse_node() do
     quote do
       defp parse_node(data) do
         id = data["id(n)"]

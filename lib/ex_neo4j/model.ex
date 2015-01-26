@@ -42,10 +42,10 @@ defmodule ExNeo4j.Model do @doc false
       unquote ExNeo4j.Model.CreateMethod.generate(metadata)
       unquote ExNeo4j.Model.UpdateMethod.generate(metadata)
       unquote ExNeo4j.Model.FindMethod.generate(metadata)
+      unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
+      unquote ExNeo4j.Model.Serialization.generate(metadata)
       # unquote ExNeo4j.Model.Methods.generate(metadata)
       # unquote ExNeo4j.Model.Validations.generate(metadata)
-      # unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
-      # unquote ExNeo4j.Model.Serialization.generate(metadata)
 
       @doc """
       returns the label of the model
