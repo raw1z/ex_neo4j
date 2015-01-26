@@ -78,7 +78,6 @@ defmodule Model.SaveMethodTest do
       properties: %{
         :age => 20,
         :name => "John DOE",
-        :validated => true,
         "created_at" => "2014-10-14 02:55:03 +0000",
         "updated_at" => "2014-10-14 02:55:03 +0000"
       }
@@ -103,7 +102,7 @@ defmodule Model.SaveMethodTest do
   defp fake_successfull_save_existing do
     query = """
     START n=node(81776)
-    SET n.age = 30, n.name = "John DOE", n.validated = true, n.updated_at = "2014-10-14 02:55:03 +0000"
+    SET n.age = 30, n.name = "John DOE", n.updated_at = "2014-10-14 02:55:03 +0000"
     """
 
     params = ExNeo4j.Helpers.format_statements([{query, %{}}])
