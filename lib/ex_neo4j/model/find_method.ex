@@ -38,6 +38,9 @@ defmodule ExNeo4j.Model.FindMethod do
             # unquote generate_after_find_callbacks(metadata.after_find_callbacks)
             {:ok, model}
 
+          {:error, [%{code: "Neo.ClientError.Statement.EntityNotFound", message: _}]} ->
+            {:ok, nil}
+
           {:error, errors} ->
             {:nok, errors}
         end

@@ -99,7 +99,12 @@ defmodule Model.FindMethodTest do
   test "find by id without result" do
     Mock.fake_find_by_id_request 81776, """
     {
-      "errors": [],
+      "errors": [
+        {
+          "code": "Neo.ClientError.Statement.EntityNotFound",
+          "message": "Node with id 81776"
+        }
+      ],
       "results": []
     }
     """

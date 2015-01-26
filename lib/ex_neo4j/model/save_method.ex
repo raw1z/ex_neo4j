@@ -17,6 +17,9 @@ defmodule ExNeo4j.Model.SaveMethod do
         {query, query_params} = if is_new_record, do: query_for_new_model(model), else: query_for_existing_model(model)
 
         case ExNeo4j.Db.cypher(query, query_params) do
+          {:ok, []} ->
+            {:ok, []}
+
           {:ok, [data|_]} ->
             model = parse_node(data)
             {:ok, model}
