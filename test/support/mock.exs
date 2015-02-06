@@ -4,6 +4,7 @@ defmodule Mock do
 
   defstart start_link do
     :meck.new(HttpClient)
+    :meck.new(Chronos)
     initial_state(nil)
   end
 
