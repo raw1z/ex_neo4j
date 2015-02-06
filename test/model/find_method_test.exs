@@ -9,15 +9,6 @@ defmodule Model.FindMethodTest do
     end
   end
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name, required: true
-    field :age, type: :integer, required: true
-
-    relationship :FRIEND_OF, Person
-    relationship :MARRIED_TO, Person
-  end
-
   test "find all with results" do
     Mock.fake_find_all_request """
     {
@@ -26,8 +17,8 @@ defmodule Model.FindMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]},
-            {"row": [81777, {"name":"Jane DOE", "age":16, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE", "email":"john@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]},
+            {"row": [81777, {"name":"Jane DOE", "email":"jane@doe.fr", "age":16, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]
@@ -40,6 +31,7 @@ defmodule Model.FindMethodTest do
     person = List.first(people)
     assert person.id == 81776
     assert person.name == "John DOE"
+    assert person.email == "john@doe.fr"
     assert person.age == 30
     assert person.created_at == "2014-10-14 02:55:03 +0000"
     assert person.updated_at == "2014-10-14 02:55:03 +0000"
@@ -81,7 +73,7 @@ defmodule Model.FindMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE", "email":"john@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]
@@ -91,6 +83,7 @@ defmodule Model.FindMethodTest do
     {:ok, person} = Person.find(81776)
     assert person.id == 81776
     assert person.name == "John DOE"
+    assert person.email == "john@doe.fr"
     assert person.age == 30
     assert person.created_at == "2014-10-14 02:55:03 +0000"
     assert person.updated_at == "2014-10-14 02:55:03 +0000"
@@ -137,8 +130,8 @@ defmodule Model.FindMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]},
-            {"row": [81777, {"name":"Jane DOE", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE", "email":"john@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]},
+            {"row": [81777, {"name":"Jane DOE", "email":"jane@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]
@@ -151,6 +144,7 @@ defmodule Model.FindMethodTest do
     person = List.first(people)
     assert person.id == 81776
     assert person.name == "John DOE"
+    assert person.email == "john@doe.fr"
     assert person.age == 30
     assert person.created_at == "2014-10-14 02:55:03 +0000"
     assert person.updated_at == "2014-10-14 02:55:03 +0000"

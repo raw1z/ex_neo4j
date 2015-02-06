@@ -1,16 +1,6 @@
 defmodule Model.BuildMethodTest do
   use ExUnit.Case
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name, required: true
-    field :email, required: true
-    field :age, type: :integer
-
-    relationship :FRIEND_OF, Person
-    relationship :MARRIED_TO, Person
-  end
-
   test "defines a method for building models without specifying attributes" do
     person = Person.build
     assert person.name == nil

@@ -2,16 +2,11 @@ defmodule Model.SerializationTest do
   use ExUnit.Case
   alias Poison, as: JSON
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name, required: true
-    field :age, type: :integer
-  end
-
   test "serializes a model" do
-    person = Person.build(name: "John DOE", age: 30)
+    person = Person.build(name: "John DOE", email: "john@doe.fr", age: 30)
     result = Person.to_json(person) |> JSON.decode!
     assert result["person"]["name"] == "John DOE"
+    assert result["person"]["email"] == "john@doe.fr"
     assert result["person"]["age"] == 30
   end
 

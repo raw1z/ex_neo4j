@@ -9,23 +9,14 @@ defmodule Model.CreateMethodTest do
     end
   end
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name, required: true
-    field :age, type: :integer, required: true
-
-    relationship :FRIEND_OF, Person
-    relationship :MARRIED_TO, Person
-  end
-
   test "parses responses to successfull save requests" do
     fake_successfull_save
 
-    {:ok, person} = Person.create(name: "John DOE", age: 20)
+    {:ok, person} = Person.create(name: "John DOE", email: "john@doe.fr")
 
     assert person.id == 81776
     assert person.name == "John DOE"
-    assert person.age == 20
+    assert person.email == "john@doe.fr"
     assert person.created_at == "2014-10-14 02:55:03 +0000"
     assert person.updated_at == "2014-10-14 02:55:03 +0000"
   end
@@ -33,7 +24,7 @@ defmodule Model.CreateMethodTest do
   test "parses responses to failed save requests" do
     fake_failed_save
 
-    {:nok, [resp], person} = Person.create(name: "John DOE", age: 20)
+    {:nok, [resp], person} = Person.create(name: "John DOE", email: "john@doe.fr")
 
     assert person.id == nil
     assert resp.code == "Neo.ClientError.Statement.InvalidSyntax"
@@ -60,7 +51,7 @@ defmodule Model.CreateMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":20, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE", "email":"john@doe.fr", "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]

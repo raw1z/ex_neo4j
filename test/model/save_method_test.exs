@@ -9,22 +9,14 @@ defmodule Model.SaveMethodTest do
     end
   end
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name, required: true
-    field :age, type: :integer, required: true
-
-    relationship :FRIEND_OF, Person
-    relationship :MARRIED_TO, Person
-  end
-
   test "successfully saves a new model" do
     fake_successfull_save
 
-    person = Person.build(name: "John DOE", age: 20)
+    person = Person.build(name: "John DOE", email: "john@doe.fr", age: 20)
     {:ok, person} = Person.save(person)
 
     assert person.id == 81776
+    assert person.email == "john@doe.fr"
     assert person.name == "John DOE"
     assert person.age == 20
     assert person.created_at == "2014-10-14 02:55:03 +0000"
@@ -34,12 +26,13 @@ defmodule Model.SaveMethodTest do
   test "successfully saves an existing model" do
     fake_successfull_save_existing
 
-    person = Person.build(id: 81776, name: "John DOE", age: 18)
+    person = Person.build(id: 81776, name: "John DOE", email: "john@doe.fr", age: 18)
     person = Person.update_attributes(person, age: 30)
     {:ok, person} = Person.save(person)
 
     assert person.id == 81776
     assert person.name == "John DOE"
+    assert person.email == "john@doe.fr"
     assert person.age == 30
     assert person.created_at == "2014-10-14 02:55:03 +0000"
     assert person.updated_at == "2014-10-14 02:55:03 +0000"
@@ -48,7 +41,7 @@ defmodule Model.SaveMethodTest do
   test "parses responses to failed save requests" do
     fake_failed_save
 
-    person = Person.build(name: "John DOE", age: 20)
+    person = Person.build(name: "John DOE", email: "john@doe.fr", age: 20)
     {:nok, [resp], person} = Person.save(person)
 
     assert person.id == nil
@@ -70,16 +63,17 @@ defmodule Model.SaveMethodTest do
 
   defp fake_successfull_save do
     query = """
-    CREATE (n:Test:Model:SaveMethodTest:Person { properties })
+    CREATE (n:Test:Person { properties })
     RETURN id(n), n
     """
 
     properties = %{
       properties: %{
-        :age => 20,
-        :name => "John DOE",
-        "created_at" => "2014-10-14 02:55:03 +0000",
-        "updated_at" => "2014-10-14 02:55:03 +0000"
+        :age        => 20,
+        :email      => "john@doe.fr",
+        :name       => "John DOE",
+        :created_at => "2014-10-14 02:55:03 +0000",
+        :updated_at => "2014-10-14 02:55:03 +0000"
       }
     }
 
@@ -91,7 +85,7 @@ defmodule Model.SaveMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":20, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE","email":"john@doe.fr", "age":20, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]
@@ -102,7 +96,7 @@ defmodule Model.SaveMethodTest do
   defp fake_successfull_save_existing do
     query = """
     START n=node(81776)
-    SET n.age = 30, n.name = "John DOE", n.updated_at = "2014-10-14 02:55:03 +0000"
+    SET n.age = 30, n.email = "john@doe.fr", n.name = "John DOE", n.updated_at = "2014-10-14 02:55:03 +0000"
     """
 
     params = ExNeo4j.Helpers.format_statements([{query, %{}}])
@@ -113,7 +107,7 @@ defmodule Model.SaveMethodTest do
         {
           "columns": ["id(n)", "n"],
           "data": [
-            {"row": [81776, {"name":"John DOE", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
+            {"row": [81776, {"name":"John DOE","email":"john@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
           ]
         }
       ]

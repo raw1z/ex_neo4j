@@ -46,8 +46,8 @@ defmodule ExNeo4j.Model.SaveMethod do
 
         date = current_datetime
         properties = properties
-          |> Map.put("updated_at", date)
-          |> Map.put("created_at", date)
+          |> Map.put(:updated_at, date)
+          |> Map.put(:created_at, date)
 
         query_params = %{
           properties: properties

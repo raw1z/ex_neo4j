@@ -1,16 +1,6 @@
 defmodule Model.RelationshipTest do
   use ExUnit.Case
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name
-    field :age, type: :integer
-    field :email, required: true, unique: true, format: ~r/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
-
-    relationship :FRIEND_OF, Person
-    relationship :MARRIED_TO, Person
-  end
-
   test "defines relationships" do
     relationship_names = Person.metadata.relationships |> Enum.map(&(&1.name))
     relationship_related_models = Person.metadata.relationships |> Enum.map(&(&1.related_model))

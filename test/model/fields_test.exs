@@ -1,16 +1,21 @@
 defmodule Model.FieldsTest do
   use ExUnit.Case
 
-  defmodule Person do
-    use ExNeo4j.Model
-    field :name
-    field :age, type: :integer
-    field :email, required: true, unique: true, format: ~r/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
-  end
-
   test "defines fields" do
     field_names = Person.metadata.fields |> Enum.map fn field -> field.name end
-    assert field_names == [:age, :created_at, :email, :errors, :id, :name, :relationships, :updated_at, :validated]
+    assert field_names == [
+      :age,
+      :created_at,
+      :email,
+      :errors,
+      :friend_of,
+      :id,
+      :married_to,
+      :name,
+      :relationships,
+      :updated_at,
+      :validated
+    ]
   end
 
   test "sets the type of the fields" do
@@ -27,7 +32,7 @@ defmodule Model.FieldsTest do
 
   test "defines valid default values for field attributes" do
     fields = Person.metadata.fields
-    name_field = Enum.find fields, fn field -> field.name == :name end
+    name_field = Enum.find fields, fn field -> field.name == :age end
     assert name_field.required == false
     assert name_field.unique == false
     assert name_field.default == nil

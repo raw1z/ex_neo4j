@@ -56,7 +56,7 @@ defmodule Mock do
 
   defcall fake_find_all_request(expected_response), state: state do
     query = """
-    MATCH (n:Test:Model:FindMethodTest:Person {})
+    MATCH (n:Test:Person {})
     RETURN id(n), n
     """
     mock_find_request query, expected_response
@@ -65,7 +65,7 @@ defmodule Mock do
 
   defcall fake_find_by_properties_request(expected_response), state: state do
     query = """
-    MATCH (n:Test:Model:FindMethodTest:Person {age: 30})
+    MATCH (n:Test:Person {age: 30})
     RETURN id(n), n
     """
     mock_find_request query, expected_response
