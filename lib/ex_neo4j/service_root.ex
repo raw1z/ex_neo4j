@@ -8,6 +8,13 @@ defmodule ExNeo4j.ServiceRoot do
       Keyword.get(config, :url)
   end
 
+  %URI{userinfo: user_info} = URI.parse(url)
+  if user_info != nil do
+    def user_info do
+      unquote(Macro.escape(user_info))
+    end
+  end
+
   response = HTTPoison.get!("#{url}/db/data/")
   case response do
     %HTTPoison.Response{status_code: 200, body: body} ->

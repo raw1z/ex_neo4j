@@ -9,7 +9,7 @@
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "7871e2ebe8811efb64e1917e2de455fa87e8dfe3", [tag: "v4.1.0"]},
   "idna": {:hex, :idna, "1.0.2"},
   "inflex": {:hex, :inflex, "0.2.9"},
-  "jazz": {:package, "0.2.1"},
+  "jazz": {:hex, :jazz, "0.2.1"},
   "lager": {:git, "https://github.com/basho/lager.git", "dd267603e93e8babe9ef9164fc176b430d669431", []},
   "meck": {:hex, :meck, "0.8.2"},
   "mock": {:git, "git://github.com/jjh42/mock.git", "099c0fddac6f1444bc37753b65866f2138dceffa", []},
