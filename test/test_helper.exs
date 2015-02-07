@@ -1,6 +1,5 @@
 ExUnit.start
 Code.require_file "../support/mock.exs", __ENV__.file
-Mock.start_link
 
 defmodule Person do
   use ExNeo4j.Model
@@ -11,3 +10,4 @@ defmodule Person do
   relationship :FRIEND_OF, Person
   relationship :MARRIED_TO, Person
 end
+

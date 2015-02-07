@@ -1,93 +1,72 @@
 defmodule Mock do
-  use ExActor.GenServer, export: :mock
-  alias ExNeo4j.HttpClient
-
-  defstart start_link do
-    :meck.new(HttpClient)
-    :meck.new(Chronos)
-    initial_state(nil)
-  end
-
-  defcall http_request(method, params, expected_response), state: state do
-    mock_http_request(method, params, expected_response)
-    {:reply, :ok, state}
-  end
-
-  defcall unload, state: state do
-    :meck.unload(Chronos)
-    :meck.unload(HttpClient)
-    {:reply, :ok, state}
-  end
-
-  defcall fake, state: state do
+  def init_mocks do
+    mock_module Chronos
     :meck.expect(Chronos, :now, fn -> {{2014, 10, 14}, {2, 55, 3}} end)
-    :meck.expect(HttpClient, :start_link, fn (nil) -> :ok end)
-    :meck.expect(HttpClient, :base_url, fn -> "http://localhost:7474" end)
-
-    mock_http_request :get, ["/db/data/"], """
-    {
-      "extensions" : {
-      },
-      "node" : "http://localhost:7474/db/data/node",
-      "node_index" : "http://localhost:7474/db/data/index/node",
-      "relationship_index" : "http://localhost:7474/db/data/index/relationship",
-      "extensions_info" : "http://localhost:7474/db/data/ext",
-      "relationship_types" : "http://localhost:7474/db/data/relationship/types",
-      "batch" : "http://localhost:7474/db/data/batch",
-      "cypher" : "http://localhost:7474/db/data/cypher",
-      "indexes" : "http://localhost:7474/db/data/schema/index",
-      "constraints" : "http://localhost:7474/db/data/schema/constraint",
-      "transaction" : "http://localhost:7474/db/data/transaction",
-      "node_labels" : "http://localhost:7474/db/data/labels",
-      "neo4j_version" : "2.1.5"
-    }
-    """
-    {:reply, :ok, state}
+    mock_module ExNeo4j.Db, [:unstick, :passthrough]
+    mock_module ExNeo4j.HttpClient, [:unstick, :passthrough]
   end
 
-  defcall fake_find_by_id_request(id, expected_response), state: state do
-    query = """
-    START n=node(#{id})
-    RETURN id(n), n
-    """
-    mock_find_request query, expected_response
-    {:reply, :ok, state}
+  def unload_mocks do
+    :meck.unload(ExNeo4j.Db)
+    :meck.unload(ExNeo4j.HttpClient)
+    :meck.unload(Chronos)
   end
 
-  defcall fake_find_all_request(expected_response), state: state do
-    query = """
-    MATCH (n:Test:Person {})
-    RETURN id(n), n
-    """
-    mock_find_request query, expected_response
-    {:reply, :ok, state}
+  defp mock_module(mod, params \\ []) do
+    already_mocked = Process.list
+      |> Enum.map(&Process.info/1)
+      |> Enum.filter(&(&1 != nil))
+      |> Enum.map(&(Keyword.get(&1, :registered_name)))
+      |> Enum.filter(&(&1 == :"#{mod}_meck"))
+      |> Enum.any?
+
+    unless already_mocked, do: do_mock_module(mod, params)
   end
 
-  defcall fake_find_by_properties_request(expected_response), state: state do
-    query = """
-    MATCH (n:Test:Person {age: 30})
-    RETURN id(n), n
-    """
-    mock_find_request query, expected_response
-    {:reply, :ok, state}
+  defp do_mock_module(mod, []), do: :meck.new(mod)
+  defp do_mock_module(mod, params), do: :meck.new(mod, params)
+
+  defmacro enable_mock(do: block) do
+    quote do
+      init_mocks
+      unquote(block)
+      unload_mocks
+    end
   end
 
-  defp mock_find_request(query, expected_response) do
-    params = ExNeo4j.Helpers.format_statements([{query, %{}}])
-    mock_http_request :post, ["/db/data/transaction/commit", params], expected_response
+  defmacro cypher_returns(response, for_query: query) do
+    quote bind_quoted: [query: query, response: response] do
+      :meck.expect(ExNeo4j.Db, :cypher, fn
+        (query) -> response
+      end)
+    end
   end
 
-  defp mock_http_request(method, params, expected_response) do
-    response = faked_response(List.first(params), expected_response)
-    :meck.expect(HttpClient, method, params, response)
+  defmacro cypher_returns(response, for_query: query, with_params: params) do
+    quote bind_quoted: [query: query, response: response, params: params] do
+      :meck.expect(ExNeo4j.Db, :cypher, fn
+        (query, params) -> response
+      end)
+    end
   end
 
-  defp faked_response(url, expected_response) do
-    %Axe.Response{
-      body: expected_response,
-      data: nil,
-      resp_headers: %{"Access-Control-Allow-Origin" => "*", "Content-Type" => "application/json; charset=UTF-8; stream=true", "Server" => "Jetty(9.0.5.v20130815)", "Transfer-Encoding" => "chunked"},
-      status_code: 200,
-      url: url}
+  defmacro http_client_returns(response, for_query: query, with_params: params) do
+    quote bind_quoted: [query: query, params: params, response: response] do
+      request_body = ExNeo4j.Helpers.format_statements([{query, params}])
+      :meck.expect(ExNeo4j.HttpClient, :post!, fn
+        ("http://localhost:7474/db/data/transaction/commit", body=request_body) ->
+          %{ body: response }
+      end)
+    end
+  end
+
+  defmacro http_client_returns(response, for_queries: queries, with_params: params) do
+    quote bind_quoted: [queries: queries, params: params, response: response] do
+      request_body = ExNeo4j.Helpers.format_statements(Enum.zip(queries, params))
+      :meck.expect(ExNeo4j.HttpClient, :post!, fn
+        ("http://localhost:7474/db/data/transaction/commit", body=request_body) ->
+          %{ body: response }
+      end)
+    end
   end
 end

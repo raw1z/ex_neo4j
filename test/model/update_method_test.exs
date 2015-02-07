@@ -1,13 +1,6 @@
 defmodule Model.UpdateMethodTest do
   use ExUnit.Case
-
-  setup do
-    Mock.fake
-
-    on_exit fn ->
-      Mock.unload
-    end
-  end
+  import Mock
 
   test "updates the attributes of a model" do
     person = Person.build(name: "John DOE", email: "jon@doe.fr", age: 20)
@@ -23,38 +16,32 @@ defmodule Model.UpdateMethodTest do
   end
 
   test "updates and save a model" do
-    fake_successfull_save_existing
+    enable_mock do
+      query = """
+      START n=node(81776)
+      SET n.age = 30, n.email = "john@doe.fr", n.name = "John DOE", n.updated_at = "2014-10-14 02:55:03 +0000"
+      """
 
-    person = Person.build(id: 81776, name: "John DOE", email: "john@doe.fr", age: 18)
-    {:ok, person} = Person.update(person, age: 30)
-
-    assert person.id == 81776
-    assert person.name == "John DOE"
-    assert person.email == "john@doe.fr"
-    assert person.age == 30
-    assert person.created_at == "2014-10-14 02:55:03 +0000"
-    assert person.updated_at == "2014-10-14 02:55:03 +0000"
-  end
-
-  defp fake_successfull_save_existing do
-    query = """
-    START n=node(81776)
-    SET n.age = 30, n.email = "john@doe.fr", n.name = "John DOE", n.updated_at = "2014-10-14 02:55:03 +0000"
-    """
-
-    params = ExNeo4j.Helpers.format_statements([{query, %{}}])
-    Mock.http_request :post, [ "/db/data/transaction/commit", params ], """
-    {
-      "errors": [],
-      "results": [
-        {
-          "columns": ["id(n)", "n"],
-          "data": [
-            {"row": [81776, {"name":"John DOE", "email":"john@doe.fr", "age":30, "created_at":"2014-10-14 02:55:03 +0000", "updated_at":"2014-10-14 02:55:03 +0000"}]}
-          ]
+      expected_response = [
+        %{
+          "id(n)" => 81776,
+              "n" => %{"name" => "John DOE","email" => "john@doe.fr", "age" => 30, "created_at" => "2014-10-14 02:55:03 +0000", "updated_at" => "2014-10-14 02:55:03 +0000"}
         }
       ]
-    }
-    """
+
+      cypher_returns { :ok, expected_response },
+        for_query: query,
+        with_params: %{}
+
+      person = Person.build(id: 81776, name: "John DOE", email: "john@doe.fr", age: 18)
+      {:ok, person} = Person.update(person, age: 30)
+
+      assert person.id == 81776
+      assert person.name == "John DOE"
+      assert person.email == "john@doe.fr"
+      assert person.age == 30
+      assert person.created_at == "2014-10-14 02:55:03 +0000"
+      assert person.updated_at == "2014-10-14 02:55:03 +0000"
+    end
   end
 end

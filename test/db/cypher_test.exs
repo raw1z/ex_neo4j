@@ -1,69 +1,71 @@
 defmodule CypherTest do
   use ExUnit.Case
+  import Mock
   alias ExNeo4j.Db
-  alias ExNeo4j.Helpers
 
-  setup do
-    Mock.fake
+  test "execute a query without arguments" do
+    enable_mock do
+      query = "match (n) return n"
 
-    on_exit fn ->
-      Mock.unload
+      expected_response = """
+      {
+        "errors": [],
+        "results": [
+          {
+            "columns": ["n"],
+            "data": [
+              {"row": [{"name":"John Doe","email":"john@doe.dummy","type":"customer"}]}
+            ]
+          }
+        ]
+      }
+      """
+
+      http_client_returns expected_response,
+        for_query: query,
+        with_params: %{}
+
+      {:ok, results} = Db.cypher(query)
+      assert Enum.count(results) == 1
+
+      item = results |> List.first |> Map.get("n")
+      assert item["name"] == "John Doe"
+      assert item["email"] == "john@doe.dummy"
+      assert item["type"] == "customer"
     end
   end
 
-  test "execute a query without arguments" do
-    query = "match (n) return n"
-    statements = Helpers.format_statements([{query, %{}}])
-
-    Mock.http_request :post, [ "/db/data/transaction/commit", statements ], """
-    {
-      "errors": [],
-      "results": [
-        {
-          "columns": ["n"],
-          "data": [
-            {"row": [{"name":"John Doe","email":"john@doe.dummy","type":"customer"}]}
-          ]
-        }
-      ]
-    }
-    """
-
-    {:ok, results} = Db.cypher(query)
-    assert Enum.count(results) == 1
-
-    item = results |> List.first |> Map.get("n")
-    assert item["name"] == "John Doe"
-    assert item["email"] == "john@doe.dummy"
-    assert item["type"] == "customer"
-  end
-
   test "execute a query with arguments" do
-    query = "match (n {props}) return n"
-    params = %{props: %{name: "John Doe"}}
-    statements = Helpers.format_statements([{query, params}])
+    enable_mock do
+      query = "match (n {props}) return n"
+      params = %{props: %{name: "John Doe"}}
 
-    Mock.http_request :post, [ "/db/data/transaction/commit", statements ], """
-    {
-      "errors": [],
-      "results": [
-        {
-          "columns": ["n"],
-          "data": [
-            {"row": [{"name":"John Doe","email":"john@doe.dummy","type":"customer"}]}
-          ]
-        }
-      ]
-    }
-    """
+      expected_response = """
+      {
+        "errors": [],
+        "results": [
+          {
+            "columns": ["n"],
+            "data": [
+              {"row": [{"name":"John Doe","email":"john@doe.dummy","type":"customer"}]}
+            ]
+          }
+        ]
+      }
+      """
 
-    {:ok, results} = Db.cypher(query, params)
-    assert Enum.count(results) == 1
+      http_client_returns expected_response,
+        for_query: query,
+        with_params: params
 
-    item = results |> List.first |> Map.get("n")
-    assert item["name"] == "John Doe"
-    assert item["email"] == "john@doe.dummy"
-    assert item["type"] == "customer"
+      {:ok, results} = Db.cypher(query, params)
+      assert Enum.count(results) == 1
+
+      item = results |> List.first |> Map.get("n")
+      assert item["name"] == "John Doe"
+      assert item["email"] == "john@doe.dummy"
+      assert item["type"] == "customer"
+    end
   end
 
   test "executes multiple queries" do
@@ -71,9 +73,8 @@ defmodule CypherTest do
     query1_params = %{}
     query2 = "match (n {props}) return n"
     query2_params = %{props: %{name: "John Doe"}}
-    statements = Helpers.format_statements([{query1, query1_params}, {query2, query2_params}])
 
-    Mock.http_request :post, [ "/db/data/transaction/commit", statements ], """
+    expected_response = """
     {
       "errors": [],
       "results": [
@@ -93,6 +94,10 @@ defmodule CypherTest do
       ]
     }
     """
+
+    http_client_returns expected_response,
+      for_queries: [query1, query2],
+      with_params: [query1_params, query2_params]
 
     {:ok, results} = Db.cypher([{query1, query1_params}, {query2, query2_params}])
     assert Enum.count(results) == 2
