@@ -13,7 +13,7 @@ defmodule ExNeo4j.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison],
+    [applications: [:httpoison, :inflex, :chronos, :poison],
      mod: {ExNeo4j, []}]
   end
 
@@ -28,7 +28,6 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :exactor   , "~> 2.0.1"        } ,
       { :poison    , "~> 1.3.0"        } ,
       { :chronos   , "~> 0.3.5"        } ,
       { :inflex    , "~> 0.2.5"        } ,
