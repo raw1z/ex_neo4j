@@ -13,6 +13,8 @@ defmodule ExNeo4j.ServiceRoot do
     def user_info do
       unquote(Macro.escape(user_info))
     end
+  else
+    def user_info, do: nil
   end
 
   response = HTTPoison.get!("#{url}/db/data/")
