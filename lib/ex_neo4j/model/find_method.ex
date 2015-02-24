@@ -17,9 +17,10 @@ defmodule ExNeo4j.Model.FindMethod do
           {:ok, rows} ->
             processor = fn data ->
               model = data |> parse_node
-              # unquote generate_after_find_callbacks(metadata.after_find_callbacks)
+              unquote generate_after_find_callbacks(metadata)
               model
             end
+
             {:ok, Enum.map(rows, processor)}
 
           {:error, resp} ->
@@ -35,7 +36,7 @@ defmodule ExNeo4j.Model.FindMethod do
 
           {:ok, [data|_]} ->
             model = parse_node(data)
-            # unquote generate_after_find_callbacks(metadata.after_find_callbacks)
+            unquote generate_after_find_callbacks(metadata)
             {:ok, model}
 
           {:error, [%{code: "Neo.ClientError.Statement.EntityNotFound", message: _}]} ->
@@ -143,6 +144,16 @@ defmodule ExNeo4j.Model.FindMethod do
           RETURN id(n), n, #{return_clauses}
           """
         end
+      end
+    end
+  end
+
+  defp generate_after_find_callbacks(metadata) do
+    metadata.callbacks
+    |> Enum.filter(fn {k,_v} -> k == :after_find end)
+    |> Enum.map fn ({_k, callback}) ->
+      quote do
+        model = unquote(callback)(model)
       end
     end
   end

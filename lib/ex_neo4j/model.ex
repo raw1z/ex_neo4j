@@ -11,11 +11,7 @@ defmodule ExNeo4j.Model do @doc false
       Module.register_attribute(__MODULE__ , :fields               , accumulate: true)
       Module.register_attribute(__MODULE__ , :relationships        , accumulate: true)
       Module.register_attribute(__MODULE__ , :functions            , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :before_save          , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :before_create        , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :after_save           , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :after_create         , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :after_find           , accumulate: true)
+      Module.register_attribute(__MODULE__ , :callbacks            , accumulate: true)
       # Module.register_attribute(__MODULE__ , :validation_functions , accumulate: true)
 
       @label "#{Mix.env |> Atom.to_string |> String.capitalize}:#{String.replace(Macro.to_string(__MODULE__), ".", ":")}"
@@ -44,7 +40,6 @@ defmodule ExNeo4j.Model do @doc false
       unquote ExNeo4j.Model.FindMethod.generate(metadata)
       unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
       unquote ExNeo4j.Model.Serialization.generate(metadata)
-      # unquote ExNeo4j.Model.Methods.generate(metadata)
       # unquote ExNeo4j.Model.Validations.generate(metadata)
 
       @doc """
@@ -60,6 +55,21 @@ defmodule ExNeo4j.Model do @doc false
       def metadata do
         unquote Macro.escape(metadata)
       end
+
+      unquote generate_functions(metadata.functions)
+    end
+  end
+
+  defp generate_functions(functions) do
+    Enum.map functions, fn
+      {:public, call, expr} ->
+        quote do
+          Kernel.def unquote(call), unquote(expr)
+        end
+      {:private, call, expr} ->
+        quote do
+          Kernel.defp unquote(call), unquote(expr)
+        end
     end
   end
 
@@ -124,33 +134,66 @@ defmodule ExNeo4j.Model do @doc false
   #   end
   # end
 
-  # defmacro before_save(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @before_save unquote(method_name)
-  #   end
-  # end
+  @doc """
+  declare a before_save callback
+  """
+  defmacro before_save(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:before_save, unquote(method_name)}
+    end
+  end
 
-  # defmacro before_create(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @before_create unquote(method_name)
-  #   end
-  # end
+  @doc """
+  declare a before_create callback
+  """
+  defmacro before_create(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:before_create, unquote(method_name)}
+    end
+  end
 
-  # defmacro after_save(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @after_save unquote(method_name)
-  #   end
-  # end
+  @doc """
+  declare a before_update callback
+  """
+  defmacro before_update(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:before_update, unquote(method_name)}
+    end
+  end
 
-  # defmacro after_create(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @after_create unquote(method_name)
-  #   end
-  # end
+  @doc """
+  declare an after_save callback
+  """
+  defmacro after_save(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:after_save, unquote(method_name)}
+    end
+  end
 
-  # defmacro after_find(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @after_find unquote(method_name)
-  #   end
-  # end
+  @doc """
+  declare an after_create callback
+  """
+  defmacro after_create(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:after_create, unquote(method_name)}
+    end
+  end
+
+  @doc """
+  declare an after_update callback
+  """
+  defmacro after_update(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:after_update, unquote(method_name)}
+    end
+  end
+
+  @doc """
+  declare an after_find callback
+  """
+  defmacro after_find(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:after_find, unquote(method_name)}
+    end
+  end
 end
