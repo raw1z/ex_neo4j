@@ -66,7 +66,7 @@ defmodule Model.CreateMethodTest do
         for_query: query,
         with_params: query_params
 
-      {:nok, [resp], _person} = Person.create(name: "John DOE", email: "john@doe.fr")
+      {:nok, [resp], _person} = Person.create(name: "John DOE", email: "john@doe.fr", enable_validations: false)
 
       assert resp.code == "Neo.ClientError.Statement.InvalidSyntax"
       assert resp.message == "Invalid input 'T': expected <init> (line 1, column 1)\n\"This is not a valid Cypher Statement.\"\n ^"

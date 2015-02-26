@@ -91,7 +91,7 @@ defmodule Model.SaveMethodTest do
         for_query: query,
         with_params: %{}
 
-      person = Person.build(id: 81776, name: "John DOE", email: "john@doe.fr", age: 18)
+      person = Person.build(id: 81776, name: "John DOE", email: "john@doe.fr", age: 18, enable_validations: false)
       person = Person.update_attributes(person, age: 30)
       {:nok, [resp], _person} = Person.save(person)
 

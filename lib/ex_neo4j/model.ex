@@ -23,6 +23,7 @@ defmodule ExNeo4j.Model do @doc false
       field :created_at, type: :date
       field :updated_at, type: :date
       field :validated, type: :boolean, default: false, transient: true
+      field :enable_validations, type: :boolean, default: true, transient: true
     end
   end
 

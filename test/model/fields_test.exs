@@ -7,6 +7,7 @@ defmodule Model.FieldsTest do
       :age,
       :created_at,
       :email,
+      :enable_validations,
       :errors,
       :friend_of,
       :id,

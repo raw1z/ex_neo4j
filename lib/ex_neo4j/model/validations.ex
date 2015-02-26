@@ -2,10 +2,13 @@ defmodule ExNeo4j.Model.Validations do
   def generate(metadata) do
     quote do
       defp validate(%__MODULE__{}=model) do
-        unquote generate_for_required_fiels(metadata.fields)
-        unquote generate_for_unique_fields(metadata.fields)
-        unquote generate_for_formatted_fields(metadata.fields)
-        unquote generate_for_user_defined(metadata.validation_functions)
+        if model.enable_validations == true do
+          unquote generate_for_required_fiels(metadata.fields)
+          unquote generate_for_unique_fields(metadata.fields)
+          unquote generate_for_formatted_fields(metadata.fields)
+          unquote generate_for_user_defined(metadata.validation_functions)
+        end
+
         Map.put(model, :validated, true)
       end
     end
