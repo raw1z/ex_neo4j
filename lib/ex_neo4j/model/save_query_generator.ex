@@ -73,7 +73,7 @@ defmodule ExNeo4j.Model.SaveQueryGenerator do
       if Enum.count(relationships) == 0 do
         query_template_for_new_model_without_relationships(model, module)
       else
-        query_template_for_new_model_with_relationships(model, module, relationships)
+        query_template_for_new_model_with_relationships(module, relationships)
       end
     end
   end
@@ -94,7 +94,7 @@ defmodule ExNeo4j.Model.SaveQueryGenerator do
     {start_clauses, relationship_clauses, return_clauses}
   end
 
-  defp query_template_for_new_model_with_relationships(model, module, relationships) do
+  defp query_template_for_new_model_with_relationships(module, relationships) do
     clauses = relationships
               |> Enum.map(&(clauses_for_relationship(&1)))
 
