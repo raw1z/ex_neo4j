@@ -1,13 +1,4 @@
 ExUnit.start
 Code.require_file "../support/mock.exs", __ENV__.file
-
-defmodule Person do
-  use ExNeo4j.Model
-  field :name, required: true
-  field :email, required: true, unique: true, format: ~r/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
-  field :age, type: :integer
-
-  relationship :FRIEND_OF, Person
-  relationship :MARRIED_TO, Person
-end
+Code.require_file "../support/person.exs", __ENV__.file
 

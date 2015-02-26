@@ -12,7 +12,7 @@ defmodule ExNeo4j.Model do @doc false
       Module.register_attribute(__MODULE__ , :relationships        , accumulate: true)
       Module.register_attribute(__MODULE__ , :functions            , accumulate: true)
       Module.register_attribute(__MODULE__ , :callbacks            , accumulate: true)
-      # Module.register_attribute(__MODULE__ , :validation_functions , accumulate: true)
+      Module.register_attribute(__MODULE__ , :validation_functions , accumulate: true)
 
       @label "#{Mix.env |> Atom.to_string |> String.capitalize}:#{String.replace(Macro.to_string(__MODULE__), ".", ":")}"
       @before_compile ExNeo4j.Model
@@ -40,7 +40,7 @@ defmodule ExNeo4j.Model do @doc false
       unquote ExNeo4j.Model.FindMethod.generate(metadata)
       unquote ExNeo4j.Model.DeleteMethod.generate(metadata)
       unquote ExNeo4j.Model.Serialization.generate(metadata)
-      # unquote ExNeo4j.Model.Validations.generate(metadata)
+      unquote ExNeo4j.Model.Validations.generate(metadata)
 
       @doc """
       returns the label of the model
@@ -94,11 +94,11 @@ defmodule ExNeo4j.Model do @doc false
 
   ## Example
 
-      defmodule Person do
+      defmodule User do
         use ExNeo4j.Model
 
         field :name
-        field :age
+        field :email
       end
   """
   defmacro field(name, attributes \\ []) do
@@ -112,11 +112,12 @@ defmodule ExNeo4j.Model do @doc false
 
   ## Example
 
-      defmodule Person do
+      defmodule User do
         use ExNeo4j.Model
 
         field :name
-        relationship :FRIEND_OF, Person
+        field :email
+        relationship :FRIEND_OF, User
       end
   """
   defmacro relationship(name, related_model) do
@@ -128,11 +129,11 @@ defmodule ExNeo4j.Model do @doc false
     end
   end
 
-  # defmacro validate_with(method_name) when is_atom(method_name) do
-  #   quote do
-  #     @validation_functions unquote(method_name)
-  #   end
-  # end
+  defmacro validate_with(method_name) when is_atom(method_name) do
+    quote do
+      @validation_functions unquote(method_name)
+    end
+  end
 
   @doc """
   declare a before_save callback

@@ -6,7 +6,7 @@ defmodule ExNeo4j.Model.SaveMethod do
 
     quote do
       def save(%__MODULE__{validated: false, errors: nil}=model) do
-        model = %__MODULE__{model | validated: true, errors: []}
+        model = validate(model)
 
         unquote generate_callback_calls(metadata, :before_save)
         if model.id == nil do
@@ -18,7 +18,7 @@ defmodule ExNeo4j.Model.SaveMethod do
         save(model)
       end
 
-      def save(%__MODULE__{validated: true, errors: []}=model), do: do_save(model)
+      def save(%__MODULE__{validated: true, errors: nil}=model), do: do_save(model)
       def save(%__MODULE__{}=model), do: {:nok, nil, model}
 
       defp do_save(%__MODULE__{}=model) do

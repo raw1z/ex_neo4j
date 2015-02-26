@@ -48,7 +48,7 @@ defmodule Model.FieldsTest do
     assert email_field.unique == true
     assert email_field.default == nil
     assert email_field.transient == false
-    assert email_field.format == ~r/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/
+    assert email_field.format == ~r/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}\b/
     assert email_field.relationship == false
   end
 end
