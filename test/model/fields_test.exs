@@ -13,7 +13,6 @@ defmodule Model.FieldsTest do
       :id,
       :married_to,
       :name,
-      :relationships,
       :updated_at,
       :validated
     ]

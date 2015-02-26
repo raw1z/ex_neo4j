@@ -18,7 +18,6 @@ defmodule ExNeo4j.Model do @doc false
       @before_compile ExNeo4j.Model
 
       field :id, accessible: false, type: :integer
-      field :relationships, transient: true
       field :errors, transient: true
       field :created_at, type: :date
       field :updated_at, type: :date
