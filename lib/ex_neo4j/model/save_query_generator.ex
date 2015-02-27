@@ -49,7 +49,12 @@ defmodule ExNeo4j.Model.SaveQueryGenerator do
 
   def get_field_value(model, field) do
     value = Map.get(model, field.name) || []
-    List.flatten([value])
+    [value] |> List.flatten |> Enum.map fn x ->
+      cond do
+        is_integer(x) -> x
+        is_map(x) -> Map.get(x, :id)
+      end
+    end
   end
 
   defp model_relationships(model, module) do
