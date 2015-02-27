@@ -1,32 +1,16 @@
 defmodule ExNeo4j.Model.BuildMethod do
+
   def generate(metadata) do
     quote do
-      def build(params) when is_list(params) do
-        params
-          |> Enum.map(fn {k,v} -> {Atom.to_string(k), v} end)
-          |> Enum.into(%{})
-          |> build
+      require ExNeo4j.Model.ModelBuilder
+
+      def build, do: ExNeo4j.Model.ModelBuilder.build(__MODULE__)
+      def build(params) when is_list(params) or is_map(params) do
+        ExNeo4j.Model.ModelBuilder.build(__MODULE__, params)
       end
 
       unquote generate_for_required_field(metadata.fields)
       unquote generate_for_each_field(metadata.fields)
-
-      def build, do: %__MODULE__{}
-
-      def build(params) when is_map(params) do
-        mapper = fn
-          {k,v} when is_binary(k) -> {String.to_atom(k), v}
-          {k,v} when is_atom(k) -> {k, v}
-          _ -> nil
-        end
-
-        params = params
-        |> Enum.map(mapper)
-        |> Enum.filter(&(&1 != nil))
-        |> Enum.into(%{})
-
-        Map.merge(%__MODULE__{}, params)
-      end
     end
   end
 
@@ -42,7 +26,7 @@ defmodule ExNeo4j.Model.BuildMethod do
           |> Enum.map(fn {k,v} -> {String.to_atom(k), v} end)
           |> Enum.into(Map.new)
 
-          Map.merge %__MODULE__{}, attributes
+          ExNeo4j.Model.ModelBuilder.build(__MODULE__, attributes)
         end
       end
     end
@@ -59,7 +43,8 @@ defmodule ExNeo4j.Model.BuildMethod do
         attributes = attributes
         |> Enum.map(fn {k,v} -> {String.to_atom(k), v} end)
         |> Enum.into(Map.new)
-        Map.merge %__MODULE__{}, attributes
+
+        ExNeo4j.Model.ModelBuilder.build(__MODULE__, attributes)
       end
     end
   end

@@ -16,7 +16,7 @@ defmodule ExNeo4j.Model.FindMethod do
 
           {:ok, rows} ->
             processor = fn data ->
-              model = data |> parse_node
+              model = ExNeo4j.Model.NodeParser.parse(__MODULE__, data)
               unquote generate_after_find_callbacks(metadata)
               model
             end
@@ -34,8 +34,8 @@ defmodule ExNeo4j.Model.FindMethod do
           {:ok, []} ->
             {:ok, nil}
 
-          {:ok, [data|_]} ->
-            model = parse_node(data)
+          {:ok, data} ->
+            model = ExNeo4j.Model.NodeParser.parse(__MODULE__, data)
             unquote generate_after_find_callbacks(metadata)
             {:ok, model}
 

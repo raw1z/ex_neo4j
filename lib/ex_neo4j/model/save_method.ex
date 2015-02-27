@@ -26,7 +26,7 @@ defmodule ExNeo4j.Model.SaveMethod do
             {:ok, []}
 
           {:ok, [data|_]} ->
-            model = parse_node(data)
+            model = ExNeo4j.Model.NodeParser.parse(__MODULE__, data)
 
             unquote generate_callback_calls(metadata, :after_save)
             if is_new_record do
