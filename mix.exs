@@ -30,7 +30,7 @@ defmodule ExNeo4j.Mixfile do
     [
       { :poison    , "~> 1.3.0"        } ,
       { :chronos   , "~> 0.3.5"        } ,
-      { :inflex    , "~> 0.2.5"        } ,
+      { :inflex    , "~> 1.0.0"        } ,
       { :httpoison , "~> 0.6"          } ,
 
       { :meck, "~> 0.8.2", only: :test }

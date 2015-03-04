@@ -8,7 +8,7 @@
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "1419c64468483d192cc017f18de3412f9dca7fb4", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "7871e2ebe8811efb64e1917e2de455fa87e8dfe3", [tag: "v4.1.0"]},
   "idna": {:hex, :idna, "1.0.2"},
-  "inflex": {:hex, :inflex, "0.2.9"},
+  "inflex": {:hex, :inflex, "1.0.0"},
   "jazz": {:hex, :jazz, "0.2.1"},
   "lager": {:git, "https://github.com/basho/lager.git", "dd267603e93e8babe9ef9164fc176b430d669431", []},
   "meck": {:hex, :meck, "0.8.2"},
