@@ -15,7 +15,7 @@ defmodule ExNeo4j.Model.NodeParser do
       relationship_name = relationship.name |> Atom.to_string |> String.downcase
 
       relationship_data = Map.keys(data_row)
-      |> Enum.filter(&String.starts_with?(&1, relationship_name))
+      |> Enum.filter(&(String.starts_with?(&1, relationship_name) && data_row[&1] != nil))
       |> Enum.map(&Map.put(data_row[&1], :id, data_row["id(#{&1})"]))
       |> Enum.filter(&(&1 != nil))
       |> Enum.map(&relationship.related_model.build(&1))
