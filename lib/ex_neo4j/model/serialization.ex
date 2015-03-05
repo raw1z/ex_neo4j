@@ -1,5 +1,5 @@
 defmodule ExNeo4j.Model.Serialization do
-  def generate(metadata) do
+  def generate(_metadata) do
     quote do
       def serialize_attributes(%__MODULE__{}=model) do
         ExNeo4j.Model.Serializer.serialize_attributes(__MODULE__, model)
