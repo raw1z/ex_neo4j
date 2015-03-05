@@ -17,7 +17,7 @@ defmodule ExNeo4j.Model do @doc false
       @label "#{Mix.env |> Atom.to_string |> String.capitalize}:#{String.replace(Macro.to_string(__MODULE__), ".", ":")}"
       @before_compile ExNeo4j.Model
 
-      field :id, accessible: false, type: :integer
+      field :id, type: :integer
       field :errors, transient: true
       field :created_at, type: :date
       field :updated_at, type: :date

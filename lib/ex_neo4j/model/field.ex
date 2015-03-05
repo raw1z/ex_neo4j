@@ -6,7 +6,8 @@ defmodule ExNeo4j.Model.Field do
             transient: false,
             type: :string,
             format: nil,
-            relationship: false
+            relationship: false,
+            private: false
 
   def new(name, attributes) when is_list(attributes), do: new(name, Enum.into(attributes, %{}))
   def new(name, attributes) do

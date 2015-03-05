@@ -65,7 +65,7 @@ defmodule ExNeo4j.Model.Serializer do
 
   defp serialized_fields(module) do
     module.metadata.fields
-    |> Enum.filter(&(&1.name == :id or &1.name == :errors or &1.transient == false))
+    |> Enum.filter(&(&1.name == :id or &1.name == :errors or (&1.transient == false and &1.private == false)))
     |> Enum.filter(&(&1.relationship == false))
   end
 
