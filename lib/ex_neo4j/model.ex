@@ -162,6 +162,15 @@ defmodule ExNeo4j.Model do @doc false
   end
 
   @doc """
+  declare a before_validation callback
+  """
+  defmacro before_validation(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:before_validation, unquote(method_name)}
+    end
+  end
+
+  @doc """
   declare an after_save callback
   """
   defmacro after_save(method_name) when is_atom(method_name) do
@@ -185,6 +194,15 @@ defmodule ExNeo4j.Model do @doc false
   defmacro after_update(method_name) when is_atom(method_name) do
     quote do
       @callbacks {:after_update, unquote(method_name)}
+    end
+  end
+
+  @doc """
+  declare an after_validation callback
+  """
+  defmacro after_validation(method_name) when is_atom(method_name) do
+    quote do
+      @callbacks {:after_validation, unquote(method_name)}
     end
   end
 

@@ -2,6 +2,8 @@ defmodule ExNeo4j.Model.Validations do
   def generate(metadata) do
     quote do
       defp validate(%__MODULE__{}=model) do
+        unquote generate_callback_calls(metadata, :before_validation)
+
         if model.enable_validations == true do
           unquote generate_for_required_fiels(metadata.fields)
           unquote generate_for_unique_fields(metadata.fields)
@@ -9,7 +11,10 @@ defmodule ExNeo4j.Model.Validations do
           unquote generate_for_user_defined(metadata.validation_functions)
         end
 
-        Map.put(model, :validated, true)
+        model = Map.put(model, :validated, true)
+        unquote generate_callback_calls(metadata, :after_validation)
+
+        model
       end
     end
   end
@@ -54,6 +59,16 @@ defmodule ExNeo4j.Model.Validations do
     quote do
       model = Enum.reduce unquote(functions), model, fn (func, model) ->
         ExNeo4j.Model.FunctionBasedValidator.validate(model, __MODULE__, func)
+      end
+    end
+  end
+
+  defp generate_callback_calls(metadata, kind) do
+    metadata.callbacks
+    |> Enum.filter(fn {k, _v} -> k == kind end)
+    |> Enum.map fn {_k, callback} ->
+      quote do
+        model = unquote(callback)(model)
       end
     end
   end
