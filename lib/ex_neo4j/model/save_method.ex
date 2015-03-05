@@ -23,6 +23,14 @@ defmodule ExNeo4j.Model.SaveMethod do
 
         case ExNeo4j.Db.cypher(query, query_params) do
           {:ok, []} ->
+
+            unquote generate_callback_calls(metadata, :after_save)
+            if is_new_record do
+              unquote generate_callback_calls(metadata, :after_create)
+            else
+              unquote generate_callback_calls(metadata, :after_update)
+            end
+
             {:ok, []}
 
           {:ok, [data|_]} ->
