@@ -51,7 +51,8 @@ defmodule ExNeo4j.Model.SaveQueryGenerator do
     value = Map.get(model, field.name) || []
     [value] |> List.flatten |> Enum.map fn x ->
       cond do
-        is_integer(x) -> x
+        # TODO: review the is_binary condition when the support for types will have been implemented
+        is_integer(x) || is_binary(x) -> x
         is_map(x) -> Map.get(x, :id)
       end
     end
