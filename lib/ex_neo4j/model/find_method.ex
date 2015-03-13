@@ -1,6 +1,28 @@
 defmodule ExNeo4j.Model.FindMethod do
   def generate(metadata) do
     quote do
+      def find!(), do: find! %{}
+
+      def find!(properties) when is_map(properties) do
+        find Map.to_list(properties)
+      end
+
+      def find!(properties) when is_list(properties) do
+        case find(properties) do
+          {:ok, result} -> result
+          {:error, resp} ->
+            raise "Query failed: #{inspect resp}"
+        end
+      end
+
+      def find!(id) do
+        case find(id) do
+          {:ok, result} -> result
+          {:error, errors} ->
+            raise "Query failed: #{inspect errors}"
+        end
+      end
+
       def find(), do: find %{}
 
       def find(properties) when is_map(properties) do
