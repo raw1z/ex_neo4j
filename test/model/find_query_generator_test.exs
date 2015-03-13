@@ -53,4 +53,50 @@ defmodule Model.FindQueryGeneratorTest do
     RETURN id(n), n, id(friend_of), friend_of, id(married_to), married_to
     """
   end
+
+  test "finds by properties and order results by a property" do
+    query = FindQueryGenerator.query_with_properties ModelWithoutRelationShip, age: 30, control_clauses: %{order_by: "age"}
+    assert query == """
+    MATCH (n:Test:Model:FindQueryGeneratorTest:ModelWithoutRelationShip {age: 30})
+    RETURN id(n), n
+    ORDER BY n.age
+    """
+  end
+
+  test "finds by properties and order results by a property in descending order" do
+    query = FindQueryGenerator.query_with_properties ModelWithoutRelationShip, age: 30, control_clauses: %{order_by: "age DESC"}
+    assert query == """
+    MATCH (n:Test:Model:FindQueryGeneratorTest:ModelWithoutRelationShip {age: 30})
+    RETURN id(n), n
+    ORDER BY n.age DESC
+    """
+  end
+
+  test "finds by properties and order results by several properties" do
+    query = FindQueryGenerator.query_with_properties ModelWithoutRelationShip, age: 30, control_clauses: %{order_by: ["age DESC", "name"]}
+    assert query == """
+    MATCH (n:Test:Model:FindQueryGeneratorTest:ModelWithoutRelationShip {age: 30})
+    RETURN id(n), n
+    ORDER BY n.age DESC, n.name
+    """
+  end
+
+  test "finds by properties and limit results" do
+    query = FindQueryGenerator.query_with_properties ModelWithoutRelationShip, age: 30, control_clauses: %{limit: 4}
+    assert query == """
+    MATCH (n:Test:Model:FindQueryGeneratorTest:ModelWithoutRelationShip {age: 30})
+    RETURN id(n), n
+    LIMIT 4
+    """
+  end
+
+  test "finds by properties and skip results" do
+    query = FindQueryGenerator.query_with_properties ModelWithoutRelationShip, age: 30, control_clauses: %{order_by: "age", skip: 3}
+    assert query == """
+    MATCH (n:Test:Model:FindQueryGeneratorTest:ModelWithoutRelationShip {age: 30})
+    RETURN id(n), n
+    ORDER BY n.age
+    SKIP 3
+    """
+  end
 end

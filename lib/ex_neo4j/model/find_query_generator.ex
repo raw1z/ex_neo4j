@@ -9,11 +9,15 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
   end
 
   def query_with_properties(module, properties) do
+    {properties, control_clauses} = get_control_clauses(properties)
+
     relationships = model_relationships(module)
     if Enum.empty?(relationships) do
       query_with_properties_without_relationships(module, properties)
+      |> append_control_clauses(control_clauses)
     else
       query_with_properties_and_relationships(module, properties, relationships)
+      |> append_control_clauses(control_clauses)
     end
   end
 
@@ -134,4 +138,58 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
     relationship_names = Enum.map(relationships, &(normalize(&1.name)))
     Enum.any? properties, fn {key, _} -> Enum.find(relationship_names, &(&1 == key)) end
   end
+
+  defp get_control_clauses(properties) do
+    control_clauses = properties
+    |> Keyword.get(:control_clauses, %{})
+    |> Map.put_new(:order_by, nil)
+    |> Map.put_new(:limit, nil)
+    |> Map.put_new(:skip, nil)
+
+    properties = Keyword.delete(properties, :control_clauses)
+
+    {properties, control_clauses}
+  end
+
+  defp append_control_clauses(query, %{order_by: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :order_by))
+  defp append_control_clauses(query, %{limit: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :limit))
+  defp append_control_clauses(query, %{skip: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :skip))
+
+  defp append_control_clauses(query, %{order_by: order_by}=control_clauses) when is_list(order_by) do
+    order_clauses = order_by
+    |> Enum.map(&("n.#{&1}"))
+    |> Enum.join(", ")
+
+    query = """
+    #{String.strip(query)}
+    ORDER BY #{order_clauses}
+    """
+    append_control_clauses query, Map.delete(control_clauses, :order_by)
+  end
+
+  defp append_control_clauses(query, %{order_by: order_by}=control_clauses) do
+    query = """
+    #{String.strip(query)}
+    ORDER BY n.#{order_by}
+    """
+    append_control_clauses query, Map.delete(control_clauses, :order_by)
+  end
+
+  defp append_control_clauses(query, %{limit: limit}=control_clauses) do
+    query = """
+    #{String.strip(query)}
+    LIMIT #{limit}
+    """
+    append_control_clauses query, Map.delete(control_clauses, :limit)
+  end
+
+  defp append_control_clauses(query, %{skip: skip}=control_clauses) do
+    query = """
+    #{String.strip(query)}
+    SKIP #{skip}
+    """
+    append_control_clauses query, Map.delete(control_clauses, :skip)
+  end
+
+  defp append_control_clauses(query, %{}), do: query
 end
