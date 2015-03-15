@@ -143,8 +143,8 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
     control_clauses = properties
     |> Keyword.get(:control_clauses, %{})
     |> Map.put_new(:order_by, nil)
-    |> Map.put_new(:limit, nil)
     |> Map.put_new(:skip, nil)
+    |> Map.put_new(:limit, nil)
 
     properties = Keyword.delete(properties, :control_clauses)
 
@@ -152,8 +152,8 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
   end
 
   defp append_control_clauses(query, %{order_by: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :order_by))
-  defp append_control_clauses(query, %{limit: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :limit))
   defp append_control_clauses(query, %{skip: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :skip))
+  defp append_control_clauses(query, %{limit: nil}=control_clauses), do: append_control_clauses(query, Map.delete(control_clauses, :limit))
 
   defp append_control_clauses(query, %{order_by: order_by}=control_clauses) when is_list(order_by) do
     order_clauses = order_by
@@ -175,20 +175,20 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
     append_control_clauses query, Map.delete(control_clauses, :order_by)
   end
 
-  defp append_control_clauses(query, %{limit: limit}=control_clauses) do
-    query = """
-    #{String.strip(query)}
-    LIMIT #{limit}
-    """
-    append_control_clauses query, Map.delete(control_clauses, :limit)
-  end
-
   defp append_control_clauses(query, %{skip: skip}=control_clauses) do
     query = """
     #{String.strip(query)}
     SKIP #{skip}
     """
     append_control_clauses query, Map.delete(control_clauses, :skip)
+  end
+
+  defp append_control_clauses(query, %{limit: limit}=control_clauses) do
+    query = """
+    #{String.strip(query)}
+    LIMIT #{limit}
+    """
+    append_control_clauses query, Map.delete(control_clauses, :limit)
   end
 
   defp append_control_clauses(query, %{}), do: query
