@@ -13,7 +13,7 @@ defmodule ExNeo4j.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:httpoison, :inflex, :chronos, :poison],
+    [applications: [:logger, :httpoison, :inflex, :chronos, :poison],
      mod: {ExNeo4j, []}]
   end
 
