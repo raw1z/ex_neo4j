@@ -62,7 +62,7 @@ defmodule ExNeo4j.SerializationBuffer do
     value
   end
 
-  defp resource_name(module) do
+  def resource_name(module) do
     "#{module}"
     |> String.split(".")
     |> List.last

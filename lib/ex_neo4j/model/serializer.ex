@@ -2,8 +2,13 @@ defmodule ExNeo4j.Model.Serializer do
   alias ExNeo4j.SerializationBuffer
 
   def serialize(module, models) when is_list(models) do
-    Enum.reduce models, %{}, fn (model, acc) ->
-      SerializationBuffer.add_model(acc, module, model)
+    if Enum.count(models) > 0 do
+      Enum.reduce models, %{}, fn (model, acc) ->
+        SerializationBuffer.add_model(acc, module, model)
+      end
+    else
+      resource_name = SerializationBuffer.resource_name(module)
+      Map.put %{}, resource_name, []
     end
   end
 
