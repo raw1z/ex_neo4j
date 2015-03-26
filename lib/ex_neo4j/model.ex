@@ -32,6 +32,7 @@ defmodule ExNeo4j.Model do @doc false
 
     quote do
       unquote ExNeo4j.Model.Struct.generate(metadata)
+      unquote ExNeo4j.Model.ParseNodeMethod.generate(metadata)
       unquote ExNeo4j.Model.BuildMethod.generate(metadata)
       unquote ExNeo4j.Model.SaveMethod.generate(metadata)
       unquote ExNeo4j.Model.CreateMethod.generate(metadata)
