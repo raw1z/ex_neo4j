@@ -53,8 +53,8 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
                     |> Enum.map(&normalize(&1.name))
                     |> Enum.map(&({&1, properties[&1]}))
                     |> Enum.filter(fn {_, id} -> id != nil end)
-                    |> Enum.map(fn {name, id} -> "START #{name}=node(#{id})" end)
-                    |> Enum.join("\n")
+                    |> Enum.map(fn {name, id} -> "#{name}=node(#{id})" end)
+                    |> Enum.join(",")
 
     required_match_clauses = relationships
                               |> Enum.filter(&(is_queried.(&1)))
@@ -77,7 +77,7 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
                     |> Enum.join(", ")
 
     """
-    #{start_clauses}
+    START #{start_clauses}
     MATCH (n:#{module.label} {#{query_params}})
     #{required_match_clauses}
     #{optional_match_clauses}
