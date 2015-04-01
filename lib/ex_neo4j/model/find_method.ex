@@ -4,7 +4,11 @@ defmodule ExNeo4j.Model.FindMethod do
       def find!(), do: find! %{}
 
       def find!(properties) when is_map(properties) do
-        find Map.to_list(properties)
+        case find Map.to_list(properties) do
+          {:ok, result} -> result
+          {:error, resp} ->
+            raise "Query failed: #{inspect resp}"
+        end
       end
 
       def find!(properties) when is_list(properties) do
