@@ -1,3 +1,4 @@
+# TODO : test that the model can be modified by the callbacks
 defmodule Model.SaveMethodCallbacksTest do
   use ExUnit.Case
   import Mock

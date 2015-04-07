@@ -41,13 +41,14 @@ defmodule ExNeo4j.Model.FindMethod do
             {:ok, []}
 
           {:ok, rows} ->
-            processor = fn data ->
-              model = parse_node(data)
+            models = rows
+            |> parse_node
+            |> Enum.map(fn model ->
               unquote generate_after_find_callbacks(metadata)
               model
-            end
+            end)
 
-            {:ok, Enum.map(rows, processor)}
+            {:ok, models}
 
           {:error, resp} ->
             {:nok, resp}
@@ -60,8 +61,8 @@ defmodule ExNeo4j.Model.FindMethod do
           {:ok, []} ->
             {:ok, nil}
 
-          {:ok, data} ->
-            model = parse_node(data)
+          {:ok, rows} ->
+            model = List.first parse_node(rows)
             unquote generate_after_find_callbacks(metadata)
             {:ok, model}
 
