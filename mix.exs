@@ -4,7 +4,7 @@ defmodule ExNeo4j.Mixfile do
 
   def project do
     [app: :neo4j,
-     version: "0.0.7",
+     version: "0.1.0",
      elixir: "~> 1.0",
      deps: deps]
   end
