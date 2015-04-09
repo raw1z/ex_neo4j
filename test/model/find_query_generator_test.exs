@@ -19,8 +19,8 @@ defmodule Model.FindQueryGeneratorTest do
     query = FindQueryGenerator.query_with_properties Person, name: "john", age: 30
     assert query == """
     MATCH (n:Test:Person {name: "john", age: 30})
-    OPTIONAL MATCH (n)-[:FRIEND_OF]->(friend_of)
-    OPTIONAL MATCH (n)-[:MARRIED_TO]->(married_to)
+    OPTIONAL MATCH (n)-[:FRIEND_OF]-(friend_of)
+    OPTIONAL MATCH (n)-[:MARRIED_TO]-(married_to)
     RETURN id(n), n, id(friend_of), friend_of, id(married_to), married_to
     """
   end
@@ -30,8 +30,8 @@ defmodule Model.FindQueryGeneratorTest do
     assert query == """
     START friend_of=node(1)
     MATCH (n:Test:Person {age: 30})
-    MATCH (n)-[:FRIEND_OF]->(friend_of)
-    OPTIONAL MATCH (n)-[:MARRIED_TO]->(married_to)
+    MATCH (n)-[:FRIEND_OF]-(friend_of)
+    OPTIONAL MATCH (n)-[:MARRIED_TO]-(married_to)
     RETURN id(n), n, id(friend_of), friend_of, id(married_to), married_to
     """
   end
@@ -48,8 +48,8 @@ defmodule Model.FindQueryGeneratorTest do
     query = FindQueryGenerator.query_with_id Person, 1
     assert query == """
     START n=node(1)
-    OPTIONAL MATCH (n)-[:FRIEND_OF]->(friend_of)
-    OPTIONAL MATCH (n)-[:MARRIED_TO]->(married_to)
+    OPTIONAL MATCH (n)-[:FRIEND_OF]-(friend_of)
+    OPTIONAL MATCH (n)-[:MARRIED_TO]-(married_to)
     RETURN id(n), n, id(friend_of), friend_of, id(married_to), married_to
     """
   end

@@ -58,12 +58,12 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
 
     required_match_clauses = relationships
                               |> Enum.filter(&(is_queried.(&1)))
-                              |> Enum.map(&("MATCH (n)-[:#{&1.name}]->(#{normalize(&1.name)})"))
+                              |> Enum.map(&("MATCH (n)-[:#{&1.name}]-(#{normalize(&1.name)})"))
                               |> Enum.join("\n")
 
     optional_match_clauses = relationships
                               |> Enum.filter(&(is_queried.(&1) == false))
-                              |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]->(#{normalize(&1.name)})"))
+                              |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]-(#{normalize(&1.name)})"))
                               |> Enum.join("\n")
 
     return_clauses = relationships
@@ -87,7 +87,7 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
 
   def query_with_properties_and_optional_relationships(module, properties, relationships) do
     match_clauses = relationships
-                    |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]->(#{normalize(&1.name)})"))
+                    |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]-(#{normalize(&1.name)})"))
                     |> Enum.join("\n")
 
     return_clauses = relationships
@@ -115,7 +115,7 @@ defmodule ExNeo4j.Model.FindQueryGenerator do
 
   def query_with_id_and_relationships(id, relationships) do
     match_clauses = relationships
-                    |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]->(#{normalize(&1.name)})"))
+                    |> Enum.map(&("OPTIONAL MATCH (n)-[:#{&1.name}]-(#{normalize(&1.name)})"))
                     |> Enum.join("\n")
 
     return_clauses = relationships
