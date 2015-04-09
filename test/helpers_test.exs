@@ -1,5 +1,5 @@
 defmodule HelpersText do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
   alias ExNeo4j.Helpers
 
   test "translates a cypher query without arguments to a statement" do
