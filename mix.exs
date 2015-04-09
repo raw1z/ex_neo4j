@@ -4,8 +4,8 @@ defmodule ExNeo4j.Mixfile do
 
   def project do
     [app: :neo4j,
-     version: "0.0.7",
-     elixir: "~> 1.0.0",
+     version: "0.1.0",
+     elixir: "~> 1.0",
      deps: deps]
   end
 
@@ -13,7 +13,7 @@ defmodule ExNeo4j.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:axe],
+    [applications: [:logger, :httpoison, :inflex, :chronos, :poison],
      mod: {ExNeo4j, []}]
   end
 
@@ -28,9 +28,12 @@ defmodule ExNeo4j.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      { :exactor   , "~> 0.7.0"   } ,
-      { :jazz      , "~> 0.2.1"   } ,
-      { :axe, github: "raw1z/axe" }
+      { :poison    , "~> 1.3.0"        } ,
+      { :chronos   , "~> 0.3.5"        } ,
+      { :inflex    , "~> 1.0.0"        } ,
+      { :httpoison , "~> 0.6"          } ,
+
+      { :meck, "~> 0.8.2", only: :test }
     ]
   end
 end
