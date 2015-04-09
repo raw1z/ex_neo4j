@@ -64,6 +64,14 @@ defmodule ExNeo4j.Db.Cypher do
   end
 
   defp do_run(queries) when is_list(queries) do
+    Enum.each queries, fn {query, params} ->
+      Logger.debug """
+      [neo4j] query with parameters #{inspect params}:
+
+      #{String.strip query}
+      """
+    end
+
     query_point = "#{ServiceRoot.transaction}/commit"
     response = HttpClient.post! query_point, Helpers.format_statements(queries)
     result = Poison.decode!(response.body, as: CypherQueryResult)
