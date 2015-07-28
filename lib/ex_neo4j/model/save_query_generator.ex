@@ -44,7 +44,7 @@ defmodule ExNeo4j.Model.SaveQueryGenerator do
   end
 
   defp current_datetime do
-    Chronos.Formatter.strftime(Chronos.now, "%Y-%0m-%0d %H:%M:%S +0000")
+    Timex.Date.now |> Timex.DateFormat.format!("{ISO}")
   end
 
   def get_field_value(model, field) do

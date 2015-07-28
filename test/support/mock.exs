@@ -1,7 +1,12 @@
 defmodule Mock do
   def init_mocks do
-    mock_module Chronos
-    :meck.expect(Chronos, :now, fn -> {{2014, 10, 14}, {2, 55, 3}} end)
+    mock_module Timex.Date
+    :meck.expect(Timex.Date, :now, fn ->
+      %Timex.DateTime{calendar: :gregorian, day: 14, hour: 2, minute: 55, month: 10,
+       ms: 0, second: 3,
+       timezone: %Timex.TimezoneInfo{abbreviation: "UTC", from: :min,
+        full_name: "UTC", offset_std: 0, offset_utc: 0, until: :max}, year: 2014}
+    end)
     mock_module ExNeo4j.Db, [:unstick, :passthrough]
     mock_module ExNeo4j.HttpClient, [:unstick, :passthrough]
   end
@@ -9,7 +14,7 @@ defmodule Mock do
   def unload_mocks do
     :meck.unload(ExNeo4j.Db)
     :meck.unload(ExNeo4j.HttpClient)
-    :meck.unload(Chronos)
+    :meck.unload(Timex.Date)
   end
 
   defp mock_module(mod, params \\ []) do

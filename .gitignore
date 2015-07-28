@@ -5,3 +5,4 @@ erl_crash.dump
 _exrc
 .projections.json
 /log
+config/test.exs

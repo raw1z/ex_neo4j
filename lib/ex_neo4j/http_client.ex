@@ -10,12 +10,11 @@ defmodule ExNeo4j.HttpClient do
     |> apply_authentication
   end
 
-  def apply_authentication(headers) do
-    if ServiceRoot.user_info == nil do
+  defp apply_authentication(headers) do
+    if ServiceRoot.auth_token == nil do
       headers
     else
-      token = Base.encode64(ServiceRoot.user_info)
-      Keyword.put(headers, :"Authorization",  "Basic #{token}")
+      Keyword.put(headers, :"Authorization", "Basic #{ServiceRoot.auth_token}")
     end
   end
 end

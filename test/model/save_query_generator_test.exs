@@ -9,7 +9,7 @@ defmodule Model.SaveQueryGeneratorTest do
       {query, query_params} = SaveQueryGenerator.query_for_model(john, Person)
       assert query == """
       START n=node(81776)
-      SET n.age = 30, n.email = "john@doe.fr", n.name = "John Doe", n.updated_at = "2014-10-14 02:55:03 +0000"
+      SET n.age = 30, n.email = "john@doe.fr", n.name = "John Doe", n.updated_at = "2014-10-14T02:55:03+0000"
       """
       assert query_params == %{}
     end
@@ -25,9 +25,9 @@ defmodule Model.SaveQueryGeneratorTest do
       """
       assert query_params == %{
         properties: %{
-          age: 30, created_at: "2014-10-14 02:55:03 +0000",
+          age: 30, created_at: "2014-10-14T02:55:03+0000",
           email: "john@doe.fr", name: "John Doe",
-          updated_at: "2014-10-14 02:55:03 +0000"}}
+          updated_at: "2014-10-14T02:55:03+0000"}}
     end
   end
 
@@ -45,9 +45,9 @@ defmodule Model.SaveQueryGeneratorTest do
       """
       assert query_params == %{
         properties: %{
-          age: 30, created_at: "2014-10-14 02:55:03 +0000",
+          age: 30, created_at: "2014-10-14T02:55:03+0000",
           email: "john@doe.fr", name: "John Doe",
-          updated_at: "2014-10-14 02:55:03 +0000"}}
+          updated_at: "2014-10-14T02:55:03+0000"}}
     end
   end
 end
