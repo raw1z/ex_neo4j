@@ -21,4 +21,11 @@
 # [dep1: [key: :value],
 #  dep2: [key: :value]]
 
-[]
+use Mix.Config
+
+config :neo4j, db: [url: "http://localhost:7474"]
+
+if Mix.env == :test do
+  import_config "#{Mix.env}.exs"
+end
+
