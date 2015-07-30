@@ -66,7 +66,7 @@ defmodule ExNeo4j.SerializationBuffer do
     "#{module}"
     |> String.split(".")
     |> List.last
-    |> String.downcase
+    |> Inflex.camelize(:lower)
     |> Inflex.pluralize
   end
 
